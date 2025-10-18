@@ -2581,20 +2581,26 @@
             if (addressInput && !taxIdInput) {
                 searchInput = addressInput;
                 searchType = 'address';
+                console.log('Using address search:', searchInput);
             } else if (taxIdInput && !addressInput) {
                 searchInput = taxIdInput;
                 searchType = 'tax';
+                console.log('Using tax ID search:', searchInput);
             } else if (addressInput && taxIdInput) {
+                console.log('Both inputs filled - showing error');
                 ErrorHandler.showError('Please enter either an address OR a Tax ID/Parcel Number, not both.', 'error');
                 return;
             } else {
+                console.log('No inputs filled - showing error');
                 ErrorHandler.showError('Please enter either a property address or Tax ID/Parcel Number to search.', 'error');
                 return;
             }
             
             // Validate input
             const validation = validateSearchInput(searchInput, searchType);
+            console.log('Validation result:', validation);
             if (!validation.isValid) {
+                console.log('Validation failed:', validation.errors);
                 validation.errors.forEach(error => {
                     ErrorHandler.showError(error, 'error');
                 });
@@ -2602,13 +2608,20 @@
             }
             
             try {
+                console.log('Starting search process...');
                 const result = await performSearch(searchInput, searchType);
+                console.log('Search result:', result);
                 const { property, duration } = result;
                 
                 // Generate and display report
+                console.log('Generating report HTML...');
                 const reportHTML = generateReportHTML(property.data, property.address);
-                document.getElementById('reportDisplay').innerHTML = reportHTML;
-                document.getElementById('reportDisplay').classList.remove('hidden');
+                console.log('Report HTML generated, length:', reportHTML.length);
+                const reportDisplay = document.getElementById('reportDisplay');
+                console.log('Report display element:', reportDisplay);
+                reportDisplay.innerHTML = reportHTML;
+                reportDisplay.classList.remove('hidden');
+                console.log('Report displayed successfully');
                 
                 // Smooth scroll to report
                 document.getElementById('reportDisplay').scrollIntoView({ 
