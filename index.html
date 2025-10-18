@@ -486,50 +486,240 @@
     </footer>
 
     <script>
-        // Mock data for different properties
+        // Enhanced mock data for professional-grade title reports
         const mockProperties = {
             "123 Main St, Anytown, USA": {
                 parcelNumber: "R12345-001-002",
                 taxId: "TX-12345-001",
                 currentOwner: "John Doe and Jane Doe",
+                ownershipType: "Fee Simple",
                 legalDescription: "LOT 1, BLOCK 2, ANYTOWN ESTATES, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 15, PAGE 42, OF THE PUBLIC RECORDS OF ANYCOUNTY, USA.",
                 propertySitus: "123 Main St, Anytown, USA",
+                county: "AnyCounty",
+                state: "USA",
+                zipCode: "12345",
+                searchScope: "50 Years (1974-2024)",
+                searchDate: new Date().toISOString().split('T')[0],
+                
+                // Schedule A: Property and Ownership Information
+                scheduleA: {
+                    propertyAddress: "123 Main St, Anytown, USA",
+                    legalDescription: "LOT 1, BLOCK 2, ANYTOWN ESTATES, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 15, PAGE 42, OF THE PUBLIC RECORDS OF ANYCOUNTY, USA.",
+                    currentOwner: "John Doe and Jane Doe",
+                    ownershipType: "Fee Simple",
+                    estateType: "Fee Simple Absolute",
+                    vestingDate: "2023-05-15",
+                    vestingDocument: "Warranty Deed #2023-00456"
+                },
+                
+                // Schedule B: Exceptions and Encumbrances
+                scheduleB: {
+                    liens: [
+                        { type: "Mortgage", parties: ["John Doe and Jane Doe", "Big Bank Inc."], date: "2023-05-15", docNum: "2023-00457", status: "Open", amount: "$350,000", priority: "First" },
+                        { type: "Federal Tax Lien", parties: ["IRS", "Emily Investor"], date: "2012-08-01", docNum: "2012-00987", status: "Released", amount: "$15,200", releaseDate: "2013-02-15", releaseDoc: "2023-00123" }
+                    ],
+                    easements: [
+                        { type: "Utility Easement", parties: ["Electric Company"], date: "2010-05-15", docNum: "2010-00189", status: "Active", description: "Grants access to the rear 10 feet of the property for utility maintenance", width: "10 feet", location: "Rear property line" },
+                        { type: "Drainage Easement", parties: ["City of Anytown"], date: "2008-03-20", docNum: "2008-00234", status: "Active", description: "Storm water drainage easement", width: "5 feet", location: "North side" }
+                    ],
+                    restrictions: [
+                        { type: "HOA Covenants", parties: ["Anytown Estates HOA"], date: "2005-01-15", docNum: "2005-00045", status: "Active", description: "Homeowners Association bylaws and restrictions", monthlyFee: "$150" },
+                        { type: "Zoning Restriction", parties: ["City of Anytown"], date: "2000-06-01", docNum: "2000-00345", status: "Active", description: "Single-family residential zoning", setbacks: "25 feet front, 10 feet sides, 15 feet rear" }
+                    ],
+                    judgments: [],
+                    pendingActions: []
+                },
+                
+                // Schedule C: Legal Description and Jurisdiction
+                scheduleC: {
+                    legalDescription: "LOT 1, BLOCK 2, ANYTOWN ESTATES, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 15, PAGE 42, OF THE PUBLIC RECORDS OF ANYCOUNTY, USA.",
+                    lotNumber: "1",
+                    blockNumber: "2",
+                    subdivision: "Anytown Estates",
+                    platBook: "15",
+                    platPage: "42",
+                    township: "T1N",
+                    range: "R2E",
+                    section: "12",
+                    county: "AnyCounty",
+                    state: "USA",
+                    zoning: "R-1 (Single Family Residential)",
+                    zoningRestrictions: "Single-family dwelling, minimum 2,000 sq ft, maximum height 35 feet"
+                },
+                
+                // Enhanced Chain of Title
                 ownershipChain: [
-                    { owner: "John Doe and Jane Doe", from: "Robert Seller", deedType: "Warranty Deed", date: "2023-05-15", docNum: "2023-00456" },
-                    { owner: "Robert Seller", from: "Emily Investor", deedType: "Grant Deed", date: "2010-03-22", docNum: "2010-00123" },
-                    { owner: "Emily Investor", from: "Historic Holdings LLC", deedType: "Warranty Deed", date: "1995-08-10", docNum: "1995-00567" },
-                    { owner: "Historic Holdings LLC", from: "Margaret Johnson", deedType: "Quitclaim Deed", date: "1978-12-05", docNum: "1978-00890" },
-                    { owner: "Margaret Johnson", from: "William Johnson", deedType: "Warranty Deed", date: "1965-04-18", docNum: "1965-00234" }
+                    { owner: "John Doe and Jane Doe", from: "Robert Seller", deedType: "Warranty Deed", date: "2023-05-15", docNum: "2023-00456", consideration: "$425,000", vesting: "Joint Tenants with Right of Survivorship" },
+                    { owner: "Robert Seller", from: "Emily Investor", deedType: "Grant Deed", date: "2010-03-22", docNum: "2010-00123", consideration: "$285,000", vesting: "Fee Simple" },
+                    { owner: "Emily Investor", from: "Historic Holdings LLC", deedType: "Warranty Deed", date: "1995-08-10", docNum: "1995-00567", consideration: "$125,000", vesting: "Fee Simple" },
+                    { owner: "Historic Holdings LLC", from: "Margaret Johnson", deedType: "Quitclaim Deed", date: "1978-12-05", docNum: "1978-00890", consideration: "$45,000", vesting: "Fee Simple" },
+                    { owner: "Margaret Johnson", from: "William Johnson", deedType: "Warranty Deed", date: "1965-04-18", docNum: "1965-00234", consideration: "$12,500", vesting: "Fee Simple" }
                 ],
-                encumbrances: [
-                    { type: "Mortgage", parties: ["John Doe and Jane Doe", "Big Bank Inc."], date: "2023-05-15", docNum: "2023-00457", status: "Potentially Open" },
-                    { type: "Utility Easement", parties: ["Electric Company"], date: "2010-05-15", docNum: "2010-00189", status: "Active", description: "Grants access to the rear 10 feet of the property" },
-                    { type: "Federal Tax Lien", parties: ["IRS", "Emily Investor"], date: "2012-08-01", docNum: "2012-00987", status: "Potentially Open", amount: "$15,200" }
-                ],
-                taxStatus: "Paid",
-                amountOwed: "0.00",
-                taxLiens: "None"
+                
+                // Tax Information
+                taxInformation: {
+                    currentStatus: "Paid",
+                    amountOwed: "0.00",
+                    lastPaymentDate: "2024-01-15",
+                    annualTaxAmount: "$4,250.00",
+                    assessmentValue: "$425,000",
+                    taxYear: "2024",
+                    exemptions: ["Homestead Exemption"],
+                    taxLiens: "None",
+                    specialAssessments: []
+                },
+                
+                // Title Insurance Information
+                titleInsurance: {
+                    existingPolicies: [
+                        { company: "Big Bank Title Insurance", policyNumber: "BTI-2023-00457", amount: "$350,000", date: "2023-05-15", type: "Lender's Policy" }
+                    ],
+                    claimsHistory: "No known claims",
+                    titleDefects: "None identified"
+                },
+                
+                // Property Information
+                propertyInfo: {
+                    lotSize: "0.25 acres",
+                    squareFootage: "2,400 sq ft",
+                    bedrooms: "4",
+                    bathrooms: "3",
+                    yearBuilt: "1995",
+                    constructionType: "Frame",
+                    foundation: "Concrete Slab",
+                    roofType: "Asphalt Shingle",
+                    heatingCooling: "Central Air/Heat",
+                    utilities: "Public Water, Public Sewer, Natural Gas, Electric"
+                },
+                
+                // Market Information
+                marketInfo: {
+                    estimatedValue: "$425,000",
+                    lastSalePrice: "$425,000",
+                    lastSaleDate: "2023-05-15",
+                    pricePerSqFt: "$177.08",
+                    comparableSales: "3 sales within 0.5 miles in last 12 months"
+                }
             },
             "456 Oak Avenue, Springfield, IL": {
                 parcelNumber: "R67890-003-001",
                 taxId: "TX-67890-003",
                 currentOwner: "Sarah Williams",
+                ownershipType: "Fee Simple",
                 legalDescription: "LOT 3, BLOCK 1, OAK GROVE SUBDIVISION, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 8, PAGE 15, OF THE PUBLIC RECORDS OF SPRINGFIELD COUNTY, ILLINOIS.",
                 propertySitus: "456 Oak Avenue, Springfield, IL",
+                county: "Springfield County",
+                state: "Illinois",
+                zipCode: "62701",
+                searchScope: "50 Years (1974-2024)",
+                searchDate: new Date().toISOString().split('T')[0],
+                
+                // Schedule A: Property and Ownership Information
+                scheduleA: {
+                    propertyAddress: "456 Oak Avenue, Springfield, IL",
+                    legalDescription: "LOT 3, BLOCK 1, OAK GROVE SUBDIVISION, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 8, PAGE 15, OF THE PUBLIC RECORDS OF SPRINGFIELD COUNTY, ILLINOIS.",
+                    currentOwner: "Sarah Williams",
+                    ownershipType: "Fee Simple",
+                    estateType: "Fee Simple Absolute",
+                    vestingDate: "2021-09-12",
+                    vestingDocument: "Warranty Deed #2021-00789"
+                },
+                
+                // Schedule B: Exceptions and Encumbrances
+                scheduleB: {
+                    liens: [
+                        { type: "Mortgage", parties: ["Sarah Williams", "First National Bank"], date: "2021-09-12", docNum: "2021-00790", status: "Open", amount: "$280,000", priority: "First" },
+                        { type: "HOA Lien", parties: ["Oak Grove HOA", "Sarah Williams"], date: "2023-01-15", docNum: "2023-00045", status: "Open", amount: "$2,400", priority: "Second" },
+                        { type: "Mechanic's Lien", parties: ["ABC Construction", "Linda Davis"], date: "1990-05-20", docNum: "1990-00123", status: "Open", amount: "$8,500", priority: "Third" },
+                        { type: "Federal Tax Lien", parties: ["IRS", "Sarah Williams"], date: "2022-01-15", docNum: "2022-00089", status: "Open", amount: "$12,500", priority: "Fourth" }
+                    ],
+                    easements: [
+                        { type: "Utility Easement", parties: ["Springfield Electric"], date: "2005-08-10", docNum: "2005-00345", status: "Active", description: "Overhead power line easement", width: "15 feet", location: "East side" },
+                        { type: "Sewer Easement", parties: ["Springfield Sewer District"], date: "2000-12-01", docNum: "2000-00789", status: "Active", description: "Sewer line maintenance easement", width: "8 feet", location: "South side" }
+                    ],
+                    restrictions: [
+                        { type: "HOA Covenants", parties: ["Oak Grove HOA"], date: "2000-03-15", docNum: "2000-00123", status: "Active", description: "Homeowners Association bylaws and architectural restrictions", monthlyFee: "$125" },
+                        { type: "Zoning Restriction", parties: ["City of Springfield"], date: "1995-06-01", docNum: "1995-00456", status: "Active", description: "Single-family residential zoning", setbacks: "30 feet front, 15 feet sides, 20 feet rear" }
+                    ],
+                    judgments: [
+                        { type: "Divorce Decree", parties: ["Sarah Williams", "Ex-Spouse"], date: "2020-08-15", docNum: "2020-00567", status: "Active", description: "Property division in divorce settlement", amount: "$50,000" }
+                    ],
+                    pendingActions: [
+                        { type: "Foreclosure Notice", parties: ["First National Bank", "Sarah Williams"], date: "2024-01-20", docNum: "2024-00012", status: "Pending", description: "Notice of default on mortgage payments" }
+                    ]
+                },
+                
+                // Schedule C: Legal Description and Jurisdiction
+                scheduleC: {
+                    legalDescription: "LOT 3, BLOCK 1, OAK GROVE SUBDIVISION, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 8, PAGE 15, OF THE PUBLIC RECORDS OF SPRINGFIELD COUNTY, ILLINOIS.",
+                    lotNumber: "3",
+                    blockNumber: "1",
+                    subdivision: "Oak Grove Subdivision",
+                    platBook: "8",
+                    platPage: "15",
+                    township: "T2N",
+                    range: "R3E",
+                    section: "18",
+                    county: "Springfield County",
+                    state: "Illinois",
+                    zoning: "R-2 (Single Family Residential)",
+                    zoningRestrictions: "Single-family dwelling, minimum 1,800 sq ft, maximum height 30 feet"
+                },
+                
+                // Enhanced Chain of Title
                 ownershipChain: [
-                    { owner: "Sarah Williams", from: "Michael Thompson", deedType: "Warranty Deed", date: "2021-09-12", docNum: "2021-00789" },
-                    { owner: "Michael Thompson", from: "Linda Davis", deedType: "Grant Deed", date: "2005-11-30", docNum: "2005-00456" },
-                    { owner: "Linda Davis", from: "James Davis", deedType: "Warranty Deed", date: "1988-07-14", docNum: "1988-00234" },
-                    { owner: "James Davis", from: "Estate of Robert Davis", deedType: "Personal Representative Deed", date: "1972-03-08", docNum: "1972-00112" }
+                    { owner: "Sarah Williams", from: "Michael Thompson", deedType: "Warranty Deed", date: "2021-09-12", docNum: "2021-00789", consideration: "$350,000", vesting: "Fee Simple" },
+                    { owner: "Michael Thompson", from: "Linda Davis", deedType: "Grant Deed", date: "2005-11-30", docNum: "2005-00456", consideration: "$185,000", vesting: "Fee Simple" },
+                    { owner: "Linda Davis", from: "James Davis", deedType: "Warranty Deed", date: "1988-07-14", docNum: "1988-00234", consideration: "$75,000", vesting: "Fee Simple" },
+                    { owner: "James Davis", from: "Estate of Robert Davis", deedType: "Personal Representative Deed", date: "1972-03-08", docNum: "1972-00112", consideration: "$25,000", vesting: "Fee Simple" }
                 ],
-                encumbrances: [
-                    { type: "Mortgage", parties: ["Sarah Williams", "First National Bank"], date: "2021-09-12", docNum: "2021-00790", status: "Potentially Open" },
-                    { type: "HOA Lien", parties: ["Oak Grove HOA", "Sarah Williams"], date: "2023-01-15", docNum: "2023-00045", status: "Potentially Open", amount: "$2,400" },
-                    { type: "Mechanic's Lien", parties: ["ABC Construction", "Linda Davis"], date: "1990-05-20", docNum: "1990-00123", status: "Potentially Open", amount: "$8,500" }
-                ],
-                taxStatus: "Delinquent",
-                amountOwed: "3,247.50",
-                taxLiens: "Tax lien filed 2023-03-01, Document #2023-00156"
+                
+                // Tax Information
+                taxInformation: {
+                    currentStatus: "Delinquent",
+                    amountOwed: "3,247.50",
+                    lastPaymentDate: "2023-01-15",
+                    annualTaxAmount: "$3,500.00",
+                    assessmentValue: "$350,000",
+                    taxYear: "2024",
+                    exemptions: [],
+                    taxLiens: "Tax lien filed 2023-03-01, Document #2023-00156",
+                    specialAssessments: [
+                        { type: "Street Improvement", amount: "$1,200", dueDate: "2024-06-01", status: "Outstanding" }
+                    ]
+                },
+                
+                // Title Insurance Information
+                titleInsurance: {
+                    existingPolicies: [
+                        { company: "First National Title Insurance", policyNumber: "FNTI-2021-00790", amount: "$280,000", date: "2021-09-12", type: "Lender's Policy" }
+                    ],
+                    claimsHistory: "No known claims",
+                    titleDefects: "Multiple liens and encumbrances identified"
+                },
+                
+                // Property Information
+                propertyInfo: {
+                    lotSize: "0.20 acres",
+                    squareFootage: "1,950 sq ft",
+                    bedrooms: "3",
+                    bathrooms: "2",
+                    yearBuilt: "1988",
+                    constructionType: "Frame",
+                    foundation: "Basement",
+                    roofType: "Asphalt Shingle",
+                    heatingCooling: "Central Air/Heat",
+                    utilities: "Public Water, Public Sewer, Natural Gas, Electric"
+                },
+                
+                // Market Information
+                marketInfo: {
+                    estimatedValue: "$350,000",
+                    lastSalePrice: "$350,000",
+                    lastSaleDate: "2021-09-12",
+                    pricePerSqFt: "$179.49",
+                    comparableSales: "2 sales within 0.5 miles in last 12 months"
+                }
             }
         };
 
@@ -611,7 +801,7 @@
             }
         }
 
-        // Generate report HTML
+        // Professional-grade report generation function
         function generateReportHTML(reportData, address) {
             const currentDate = new Date().toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -619,36 +809,49 @@
                 day: 'numeric'
             });
 
-            const titleCondition = analyzeTitleCondition(reportData.encumbrances);
+            const titleCondition = analyzeTitleCondition(reportData.scheduleB?.liens || []);
             const chainAnalysis = analyzeChainOfTitle(reportData.ownershipChain);
 
             return `
-                <div class="max-w-4xl mx-auto space-y-8">
-                    <!-- Report Header -->
-                    <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                <div class="max-w-6xl mx-auto space-y-8">
+                    <!-- Professional Report Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-modern p-8 text-white">
                         <div class="text-center">
-                            <h1 class="text-2xl font-bold text-gray-900 mb-2 flex items-center justify-center">
-                                <svg class="h-8 w-8 mr-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <h1 class="text-3xl font-bold mb-2 flex items-center justify-center">
+                                <svg class="h-10 w-10 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
-                                Preliminary Title Report
+                                PRELIMINARY TITLE REPORT
                             </h1>
-                            <p class="text-gray-600 mb-4">Prepared for: Client</p>
-                            <p class="text-gray-600 mb-4">Subject Property: ${address}</p>
-                            <p class="text-sm text-gray-500">Generated on: ${currentDate}</p>
+                            <p class="text-blue-100 mb-2">TitleGuard AI - Professional Title Search</p>
+                            <p class="text-blue-100 mb-4">Subject Property: ${address}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <span class="text-blue-200">Search Date:</span>
+                                    <span class="font-semibold">${currentDate}</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-200">Search Scope:</span>
+                                    <span class="font-semibold">${reportData.searchScope || '50 Years'}</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-200">Parcel ID:</span>
+                                    <span class="font-semibold">${reportData.parcelNumber}</span>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Critical Disclaimer -->
-                        <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="mt-6 p-4 bg-red-500 bg-opacity-20 border border-red-300 rounded-lg">
                             <div class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="h-5 w-5 text-red-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                 </div>
                                 <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-red-800">CRITICAL DISCLAIMER</h3>
-                                    <p class="text-sm text-red-700 mt-1">
+                                    <h3 class="text-sm font-medium text-red-100">CRITICAL DISCLAIMER</h3>
+                                    <p class="text-sm text-red-100 mt-1">
                                         This is an informational, automated report based on a search of online public records. 
                                         It is NOT a substitute for a professional title examination or a policy of title insurance. 
                                         Data may be incomplete or inaccurate. All findings must be verified by a qualified 
@@ -658,6 +861,623 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Export Buttons -->
+                    <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-6 card-hover">
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="exportToPDF('${address}')" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                                <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    ${generateScheduleA(reportData.scheduleA, reportData)}
+                    ${generateScheduleB(reportData.scheduleB)}
+                    ${generateScheduleC(reportData.scheduleC)}
+                    ${generateChainOfTitle(reportData.ownershipChain)}
+                    ${generateTaxInformation(reportData.taxInformation)}
+                    ${generateTitleInsurance(reportData.titleInsurance)}
+                    ${generatePropertyInfo(reportData.propertyInfo)}
+                    ${generateMarketInfo(reportData.marketInfo)}
+                </div>
+            `;
+        }
+
+        // Schedule A: Property and Ownership Information
+        function generateScheduleA(scheduleA, reportData) {
+            if (!scheduleA) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        Schedule A: Property and Ownership Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Property Address</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleA.propertyAddress}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Current Owner</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleA.currentOwner}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Ownership Type</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleA.ownershipType}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Estate Type</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleA.estateType}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Vesting Date</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleA.vestingDate}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Vesting Document</label>
+                                <p class="text-lg font-mono text-gray-900">${scheduleA.vestingDocument}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Parcel ID</label>
+                                <p class="text-lg font-mono text-gray-900">${reportData.parcelNumber}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Tax ID</label>
+                                <p class="text-lg font-mono text-gray-900">${reportData.taxId}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label class="text-sm font-medium text-gray-500">Legal Description</label>
+                        <p class="text-sm text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg font-mono">${scheduleA.legalDescription}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Schedule B: Exceptions and Encumbrances
+        function generateScheduleB(scheduleB) {
+            if (!scheduleB) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        Schedule B: Exceptions and Encumbrances
+                    </h2>
+                    
+                    ${generateLiensSection(scheduleB.liens)}
+                    ${generateEasementsSection(scheduleB.easements)}
+                    ${generateRestrictionsSection(scheduleB.restrictions)}
+                    ${generateJudgmentsSection(scheduleB.judgments)}
+                    ${generatePendingActionsSection(scheduleB.pendingActions)}
+                </div>
+            `;
+        }
+
+        // Schedule C: Legal Description and Jurisdiction
+        function generateScheduleC(scheduleC) {
+            if (!scheduleC) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Schedule C: Legal Description and Jurisdiction
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Lot Number</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleC.lotNumber}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Block Number</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleC.blockNumber}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Subdivision</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleC.subdivision}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Plat Book/Page</label>
+                                <p class="text-lg font-semibold text-gray-900">Book ${scheduleC.platBook}, Page ${scheduleC.platPage}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Township/Range/Section</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleC.township}, ${scheduleC.range}, Section ${scheduleC.section}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">County</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleC.county}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">State</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleC.state}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Zoning</label>
+                                <p class="text-lg font-semibold text-gray-900">${scheduleC.zoning}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label class="text-sm font-medium text-gray-500">Zoning Restrictions</label>
+                        <p class="text-sm text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg">${scheduleC.zoningRestrictions}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Additional helper functions for Schedule B sections
+        function generateLiensSection(liens) {
+            if (!liens || liens.length === 0) return '';
+            
+            return `
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Liens</h3>
+                    <div class="space-y-3">
+                        ${liens.map(lien => `
+                            <div class="border border-gray-200 rounded-lg p-4 ${lien.status === 'Open' ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200'}">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">${lien.type}</h4>
+                                        <p class="text-sm text-gray-600">Parties: ${lien.parties.join(', ')}</p>
+                                        <p class="text-sm text-gray-600">Amount: ${lien.amount}</p>
+                                        <p class="text-sm text-gray-600">Priority: ${lien.priority}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${lien.status === 'Open' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
+                                            ${lien.status}
+                                        </span>
+                                        <p class="text-xs text-gray-500 mt-1">${lien.date}</p>
+                                        <p class="text-xs text-gray-500">Doc #${lien.docNum}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateEasementsSection(easements) {
+            if (!easements || easements.length === 0) return '';
+            
+            return `
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Easements</h3>
+                    <div class="space-y-3">
+                        ${easements.map(easement => `
+                            <div class="border border-gray-200 rounded-lg p-4 bg-blue-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">${easement.type}</h4>
+                                        <p class="text-sm text-gray-600">Parties: ${easement.parties.join(', ')}</p>
+                                        <p class="text-sm text-gray-600">Description: ${easement.description}</p>
+                                        <p class="text-sm text-gray-600">Width: ${easement.width} | Location: ${easement.location}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            ${easement.status}
+                                        </span>
+                                        <p class="text-xs text-gray-500 mt-1">${easement.date}</p>
+                                        <p class="text-xs text-gray-500">Doc #${easement.docNum}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateRestrictionsSection(restrictions) {
+            if (!restrictions || restrictions.length === 0) return '';
+            
+            return `
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Restrictions</h3>
+                    <div class="space-y-3">
+                        ${restrictions.map(restriction => `
+                            <div class="border border-gray-200 rounded-lg p-4 bg-yellow-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">${restriction.type}</h4>
+                                        <p class="text-sm text-gray-600">Parties: ${restriction.parties.join(', ')}</p>
+                                        <p class="text-sm text-gray-600">Description: ${restriction.description}</p>
+                                        ${restriction.monthlyFee ? `<p class="text-sm text-gray-600">Monthly Fee: ${restriction.monthlyFee}</p>` : ''}
+                                        ${restriction.setbacks ? `<p class="text-sm text-gray-600">Setbacks: ${restriction.setbacks}</p>` : ''}
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            ${restriction.status}
+                                        </span>
+                                        <p class="text-xs text-gray-500 mt-1">${restriction.date}</p>
+                                        <p class="text-xs text-gray-500">Doc #${restriction.docNum}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateJudgmentsSection(judgments) {
+            if (!judgments || judgments.length === 0) return '';
+            
+            return `
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Judgments</h3>
+                    <div class="space-y-3">
+                        ${judgments.map(judgment => `
+                            <div class="border border-gray-200 rounded-lg p-4 bg-orange-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">${judgment.type}</h4>
+                                        <p class="text-sm text-gray-600">Parties: ${judgment.parties.join(', ')}</p>
+                                        <p class="text-sm text-gray-600">Description: ${judgment.description}</p>
+                                        ${judgment.amount ? `<p class="text-sm text-gray-600">Amount: ${judgment.amount}</p>` : ''}
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                            ${judgment.status}
+                                        </span>
+                                        <p class="text-xs text-gray-500 mt-1">${judgment.date}</p>
+                                        <p class="text-xs text-gray-500">Doc #${judgment.docNum}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generatePendingActionsSection(pendingActions) {
+            if (!pendingActions || pendingActions.length === 0) return '';
+            
+            return `
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Pending Legal Actions</h3>
+                    <div class="space-y-3">
+                        ${pendingActions.map(action => `
+                            <div class="border border-gray-200 rounded-lg p-4 bg-red-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">${action.type}</h4>
+                                        <p class="text-sm text-gray-600">Parties: ${action.parties.join(', ')}</p>
+                                        <p class="text-sm text-gray-600">Description: ${action.description}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            ${action.status}
+                                        </span>
+                                        <p class="text-xs text-gray-500 mt-1">${action.date}</p>
+                                        <p class="text-xs text-gray-500">Doc #${action.docNum}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Additional section generators
+        function generateChainOfTitle(ownershipChain) {
+            if (!ownershipChain || ownershipChain.length === 0) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        Chain of Title (Ownership History)
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        ${ownershipChain.map((entry, index) => `
+                            <div class="border border-gray-200 rounded-lg p-4 ${index === 0 ? 'bg-green-50 border-green-200' : 'bg-gray-50'}">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">${entry.owner}</h4>
+                                        <p class="text-sm text-gray-600">From: ${entry.from}</p>
+                                        <p class="text-sm text-gray-600">Consideration: ${entry.consideration}</p>
+                                        <p class="text-sm text-gray-600">Vesting: ${entry.vesting}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${index === 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                                            ${entry.deedType}
+                                        </span>
+                                        <p class="text-xs text-gray-500 mt-1">${entry.date}</p>
+                                        <p class="text-xs text-gray-500">Doc #${entry.docNum}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateTaxInformation(taxInfo) {
+            if (!taxInfo) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                        Tax Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Current Status</label>
+                                <p class="text-lg font-semibold ${taxInfo.currentStatus === 'Paid' ? 'text-green-600' : 'text-red-600'}">
+                                    ${taxInfo.currentStatus === 'Paid' ? 'Current' : `DELINQUENT - $${taxInfo.amountOwed} Owed`}
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Annual Tax Amount</label>
+                                <p class="text-lg font-semibold text-gray-900">${taxInfo.annualTaxAmount}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Assessment Value</label>
+                                <p class="text-lg font-semibold text-gray-900">${taxInfo.assessmentValue}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Tax Year</label>
+                                <p class="text-lg font-semibold text-gray-900">${taxInfo.taxYear}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Last Payment Date</label>
+                                <p class="text-lg font-semibold text-gray-900">${taxInfo.lastPaymentDate}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Exemptions</label>
+                                <p class="text-lg font-semibold text-gray-900">${taxInfo.exemptions.length > 0 ? taxInfo.exemptions.join(', ') : 'None'}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Tax Liens</label>
+                                <p class="text-lg font-semibold ${taxInfo.taxLiens === 'None' ? 'text-green-600' : 'text-red-600'}">${taxInfo.taxLiens}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${taxInfo.specialAssessments && taxInfo.specialAssessments.length > 0 ? `
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Special Assessments</h3>
+                            <div class="space-y-3">
+                                ${taxInfo.specialAssessments.map(assessment => `
+                                    <div class="border border-gray-200 rounded-lg p-4 bg-yellow-50">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h4 class="font-semibold text-gray-900">${assessment.type}</h4>
+                                                <p class="text-sm text-gray-600">Amount: ${assessment.amount}</p>
+                                                <p class="text-sm text-gray-600">Due Date: ${assessment.dueDate}</p>
+                                            </div>
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                ${assessment.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function generateTitleInsurance(titleInsurance) {
+            if (!titleInsurance) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        Title Insurance Information
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Claims History</label>
+                            <p class="text-lg font-semibold text-gray-900">${titleInsurance.claimsHistory}</p>
+                        </div>
+                        
+                        <div>
+                            <label class="text-sm font-medium text-gray-500">Title Defects</label>
+                            <p class="text-lg font-semibold ${titleInsurance.titleDefects === 'None identified' ? 'text-green-600' : 'text-red-600'}">${titleInsurance.titleDefects}</p>
+                        </div>
+                        
+                        ${titleInsurance.existingPolicies && titleInsurance.existingPolicies.length > 0 ? `
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Existing Policies</h3>
+                                <div class="space-y-3">
+                                    ${titleInsurance.existingPolicies.map(policy => `
+                                        <div class="border border-gray-200 rounded-lg p-4 bg-blue-50">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <h4 class="font-semibold text-gray-900">${policy.company}</h4>
+                                                    <p class="text-sm text-gray-600">Policy #${policy.policyNumber}</p>
+                                                    <p class="text-sm text-gray-600">Amount: ${policy.amount}</p>
+                                                    <p class="text-sm text-gray-600">Type: ${policy.type}</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <p class="text-xs text-gray-500">${policy.date}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generatePropertyInfo(propertyInfo) {
+            if (!propertyInfo) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
+                        </svg>
+                        Property Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Lot Size</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.lotSize}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Square Footage</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.squareFootage}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Bedrooms/Bathrooms</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.bedrooms} bed / ${propertyInfo.bathrooms} bath</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Year Built</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.yearBuilt}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Construction Type</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.constructionType}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Foundation</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.foundation}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Roof Type</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.roofType}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Heating/Cooling</label>
+                                <p class="text-lg font-semibold text-gray-900">${propertyInfo.heatingCooling}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label class="text-sm font-medium text-gray-500">Utilities</label>
+                        <p class="text-sm text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg">${propertyInfo.utilities}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateMarketInfo(marketInfo) {
+            if (!marketInfo) return '';
+            
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                        Market Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Estimated Value</label>
+                                <p class="text-lg font-semibold text-gray-900">${marketInfo.estimatedValue}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Last Sale Price</label>
+                                <p class="text-lg font-semibold text-gray-900">${marketInfo.lastSalePrice}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Last Sale Date</label>
+                                <p class="text-lg font-semibold text-gray-900">${marketInfo.lastSaleDate}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Price per Sq Ft</label>
+                                <p class="text-lg font-semibold text-gray-900">${marketInfo.pricePerSqFt}</p>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Comparable Sales</label>
+                                <p class="text-lg font-semibold text-gray-900">${marketInfo.comparableSales}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
                     <!-- Export Buttons -->
                     <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-6 card-hover">
