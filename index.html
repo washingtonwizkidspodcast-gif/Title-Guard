@@ -11,6 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry&callback=initMap"></script>
     <meta name="description" content="Revolutionary AI-powered real estate intelligence platform. Instant property analysis, investment insights, market predictions, and comprehensive title searches. The future of real estate data.">
     <meta name="keywords" content="real estate intelligence, property analysis, investment insights, market predictions, title search, real estate AI, property data, market analytics, real estate technology">
     <meta name="author" content="TitleGuard AI">
@@ -1526,6 +1529,9 @@
                         </div>
                     </div>
 
+                    <!-- Property Map View -->
+                    ${generatePropertyMap(reportData)}
+                    
                     ${generateScheduleA(reportData.scheduleA, reportData)}
                     ${generateScheduleB(reportData.scheduleB)}
                     ${generateScheduleC(reportData.scheduleC)}
@@ -1834,6 +1840,143 @@
                                     <span class="text-sm font-medium text-gray-600">Maturity Date</span>
                                     <span class="text-sm font-semibold text-gray-900">${mortgage.maturityDate}</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Property Map View
+        function generatePropertyMap(reportData) {
+            if (!reportData || !reportData.coordinates) {
+                return `
+                    <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                            <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Property Location Map
+                        </h2>
+                        <div class="text-center py-8">
+                            <div class="text-gray-500 mb-4">
+                                <svg class="h-16 w-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <p class="text-gray-600 mb-2">Map view not available</p>
+                            <p class="text-sm text-gray-500">Configure Google Maps API key to enable interactive maps</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Property Location Map
+                    </h2>
+                    
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">Property Address:</span>
+                            <span class="text-sm text-gray-600">${reportData.address || 'N/A'}</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">Coordinates:</span>
+                            <span class="text-sm text-gray-600">${reportData.coordinates.lat.toFixed(6)}, ${reportData.coordinates.lng.toFixed(6)}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-700">Map Type:</span>
+                            <span class="text-sm text-gray-600">Hybrid View</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Interactive Map Container -->
+                    <div class="relative">
+                        <div id="propertyMap" class="w-full h-96 rounded-xl border border-gray-200 shadow-lg"></div>
+                        
+                        <!-- Map Loading Overlay -->
+                        <div id="mapLoadingOverlay" class="absolute inset-0 bg-white bg-opacity-90 rounded-xl flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                                <p class="text-gray-600">Loading interactive map...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Map Controls -->
+                        <div class="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-2">
+                            <div class="flex space-x-2">
+                                <button onclick="toggleMapType()" class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                    Satellite
+                                </button>
+                                <button onclick="toggleStreetView()" class="px-3 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors">
+                                    Street View
+                                </button>
+                                <button onclick="centerOnProperty()" class="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                                    Center
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Map Legend -->
+                    <div class="mt-4 grid grid-cols-2 md:grid-cols-5 gap-4 text-xs">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-blue-600 rounded-full mr-2"></div>
+                            <span>Property</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-green-600 rounded-full mr-2"></div>
+                            <span>Schools</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-red-600 rounded-full mr-2"></div>
+                            <span>Hospitals</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-yellow-600 rounded-full mr-2"></div>
+                            <span>Shopping</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-purple-600 rounded-full mr-2"></div>
+                            <span>Restaurants</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Map Features -->
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-2">Map Features:</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Interactive property marker
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Nearby amenities
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Street view integration
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="h-4 w-4 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Satellite imagery
                             </div>
                         </div>
                     </div>
@@ -4148,12 +4291,294 @@
                 
                 // Reinitialize data manager with new keys
                 realDataManager.apiKeys = this.getApiKeys();
+                
+                // Update Google Maps API key if provided
+                if (googleMapsKey && googleMapsKey !== 'YOUR_GOOGLE_MAPS_API_KEY') {
+                    updateGoogleMapsAPIKey(googleMapsKey);
+                }
             }
         };
         
         // Initialize real data manager with current API keys
         const realDataManager = new RealDataManager();
         realDataManager.apiKeys = API_CONFIG.getApiKeys();
+        
+        // GOOGLE MAPS INTEGRATION
+        let propertyMap = null;
+        let mapMarkers = [];
+        
+        // Initialize Google Maps
+        function initMap() {
+            console.log('🗺️ Google Maps initialized');
+            // Map will be created when property data is loaded
+        }
+        
+        // Create property map
+        function createPropertyMap(coordinates, propertyData) {
+            if (!coordinates || !coordinates.lat || !coordinates.lng) {
+                console.error('Invalid coordinates for map');
+                return null;
+            }
+            
+            const mapElement = document.getElementById('propertyMap');
+            if (!mapElement) {
+                console.error('Map element not found');
+                return null;
+            }
+            
+            // Clear existing map
+            if (propertyMap) {
+                propertyMap = null;
+            }
+            
+            // Create new map
+            propertyMap = new google.maps.Map(mapElement, {
+                center: { lat: coordinates.lat, lng: coordinates.lng },
+                zoom: 16,
+                mapTypeId: google.maps.MapTypeId.HYBRID,
+                styles: [
+                    {
+                        featureType: "poi",
+                        elementType: "labels",
+                        stylers: [{ visibility: "off" }]
+                    }
+                ],
+                mapTypeControl: true,
+                streetViewControl: true,
+                fullscreenControl: true,
+                zoomControl: true
+            });
+            
+            // Add property marker
+            addPropertyMarker(coordinates, propertyData);
+            
+            // Add nearby amenities
+            addNearbyAmenities(coordinates);
+            
+            return propertyMap;
+        }
+        
+        // Add property marker
+        function addPropertyMarker(coordinates, propertyData) {
+            if (!propertyMap) return;
+            
+            // Clear existing markers
+            mapMarkers.forEach(marker => marker.setMap(null));
+            mapMarkers = [];
+            
+            // Create custom marker icon
+            const markerIcon = {
+                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" fill="#667eea" stroke="#ffffff" stroke-width="3"/>
+                        <path d="M20 8c-4.4 0-8 3.6-8 8 0 6 8 16 8 16s8-10 8-16c0-4.4-3.6-8-8-8z" fill="#ffffff"/>
+                        <circle cx="20" cy="16" r="3" fill="#667eea"/>
+                    </svg>
+                `),
+                scaledSize: new google.maps.Size(40, 40),
+                anchor: new google.maps.Point(20, 20)
+            };
+            
+            // Create marker
+            const marker = new google.maps.Marker({
+                position: { lat: coordinates.lat, lng: coordinates.lng },
+                map: propertyMap,
+                title: propertyData.address || 'Property Location',
+                icon: markerIcon,
+                animation: google.maps.Animation.DROP
+            });
+            
+            // Create info window
+            const infoWindow = new google.maps.InfoWindow({
+                content: createMarkerInfoContent(propertyData)
+            });
+            
+            // Add click listener
+            marker.addListener('click', () => {
+                infoWindow.open(propertyMap, marker);
+            });
+            
+            mapMarkers.push(marker);
+            
+            // Open info window by default
+            setTimeout(() => {
+                infoWindow.open(propertyMap, marker);
+            }, 1000);
+        }
+        
+        // Create marker info content
+        function createMarkerInfoContent(propertyData) {
+            return `
+                <div class="p-4 max-w-sm">
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">${propertyData.address || 'Property Location'}</h3>
+                    <div class="space-y-2 text-sm">
+                        ${propertyData.currentOwner ? `<p><strong>Owner:</strong> ${propertyData.currentOwner}</p>` : ''}
+                        ${propertyData.marketValue ? `<p><strong>Market Value:</strong> ${propertyData.marketValue}</p>` : ''}
+                        ${propertyData.propertyType ? `<p><strong>Type:</strong> ${propertyData.propertyType}</p>` : ''}
+                        ${propertyData.squareFootage ? `<p><strong>Size:</strong> ${propertyData.squareFootage}</p>` : ''}
+                        ${propertyData.bedrooms ? `<p><strong>Bedrooms:</strong> ${propertyData.bedrooms}</p>` : ''}
+                        ${propertyData.bathrooms ? `<p><strong>Bathrooms:</strong> ${propertyData.bathrooms}</p>` : ''}
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-gray-200">
+                        <p class="text-xs text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            Data Source: ${propertyData.dataSource || 'TitleGuard AI'}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Add nearby amenities
+        function addNearbyAmenities(coordinates) {
+            if (!propertyMap) return;
+            
+            const amenities = [
+                { type: 'school', icon: '🏫', color: '#10b981' },
+                { type: 'hospital', icon: '🏥', color: '#ef4444' },
+                { type: 'shopping_mall', icon: '🛍️', color: '#f59e0b' },
+                { type: 'restaurant', icon: '🍽️', color: '#8b5cf6' },
+                { type: 'gas_station', icon: '⛽', color: '#6b7280' }
+            ];
+            
+            amenities.forEach(amenity => {
+                const service = new google.maps.places.PlacesService(propertyMap);
+                service.nearbySearch({
+                    location: { lat: coordinates.lat, lng: coordinates.lng },
+                    radius: 1000, // 1km radius
+                    type: amenity.type
+                }, (results, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                        // Add markers for first 3 results
+                        results.slice(0, 3).forEach(place => {
+                            const marker = new google.maps.Marker({
+                                position: place.geometry.location,
+                                map: propertyMap,
+                                title: place.name,
+                                icon: {
+                                    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+                                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" fill="${amenity.color}" stroke="#ffffff" stroke-width="2"/>
+                                            <text x="12" y="16" text-anchor="middle" font-size="12" fill="white">${amenity.icon}</text>
+                                        </svg>
+                                    `)}`,
+                                    scaledSize: new google.maps.Size(24, 24),
+                                    anchor: new google.maps.Point(12, 12)
+                                }
+                            });
+                            
+                            const infoWindow = new google.maps.InfoWindow({
+                                content: `
+                                    <div class="p-2">
+                                        <h4 class="font-semibold">${place.name}</h4>
+                                        <p class="text-sm text-gray-600">${place.vicinity}</p>
+                                        ${place.rating ? `<p class="text-sm"><strong>Rating:</strong> ${place.rating}/5</p>` : ''}
+                                    </div>
+                                `
+                            });
+                            
+                            marker.addListener('click', () => {
+                                infoWindow.open(propertyMap, marker);
+                            });
+                            
+                            mapMarkers.push(marker);
+                        });
+                    }
+                });
+            });
+        }
+        
+        // Update map with new property data
+        function updatePropertyMap(propertyData) {
+            if (!propertyData || !propertyData.coordinates) {
+                console.error('No coordinates available for map');
+                return;
+            }
+            
+            // Create map if it doesn't exist
+            if (!propertyMap) {
+                createPropertyMap(propertyData.coordinates, propertyData);
+            } else {
+                // Update existing map
+                propertyMap.setCenter({ lat: propertyData.coordinates.lat, lng: propertyData.coordinates.lng });
+                addPropertyMarker(propertyData.coordinates, propertyData);
+            }
+        }
+        
+        // Update Google Maps API key dynamically
+        function updateGoogleMapsAPIKey(apiKey) {
+            // Remove existing script
+            const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+            if (existingScript) {
+                existingScript.remove();
+            }
+            
+            // Add new script with updated API key
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+        
+        // Map Control Functions
+        function toggleMapType() {
+            if (!propertyMap) return;
+            
+            const currentType = propertyMap.getMapTypeId();
+            const newType = currentType === google.maps.MapTypeId.HYBRID ? 
+                google.maps.MapTypeId.ROADMAP : google.maps.MapTypeId.HYBRID;
+            
+            propertyMap.setMapTypeId(newType);
+            
+            // Update button text
+            const button = event.target;
+            button.textContent = newType === google.maps.MapTypeId.HYBRID ? 'Satellite' : 'Road';
+        }
+        
+        function toggleStreetView() {
+            if (!propertyMap) return;
+            
+            const streetView = propertyMap.getStreetView();
+            if (streetView.getVisible()) {
+                streetView.setVisible(false);
+                event.target.textContent = 'Street View';
+            } else {
+                streetView.setVisible(true);
+                streetView.setPosition(propertyMap.getCenter());
+                event.target.textContent = 'Hide Street View';
+            }
+        }
+        
+        function centerOnProperty() {
+            if (!propertyMap || !mapMarkers.length) return;
+            
+            const propertyMarker = mapMarkers[0]; // First marker is the property
+            if (propertyMarker) {
+                propertyMap.setCenter(propertyMarker.getPosition());
+                propertyMap.setZoom(18);
+            }
+        }
+        
+        // Initialize map when report is displayed
+        function initializeMapAfterReport() {
+            // Wait for DOM to be ready
+            setTimeout(() => {
+                const mapElement = document.getElementById('propertyMap');
+                if (mapElement && window.google && window.google.maps) {
+                    // Hide loading overlay
+                    const loadingOverlay = document.getElementById('mapLoadingOverlay');
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                    
+                    // Initialize map if we have property data
+                    if (window.currentPropertyData && window.currentPropertyData.coordinates) {
+                        updatePropertyMap(window.currentPropertyData);
+                    }
+                }
+            }, 1000);
+        }
 
         // Legacy function for backward compatibility
         function validateAddress(address) {
@@ -4497,6 +4922,7 @@
                     }
                 },
                 address: realData.address,
+                coordinates: realData.coordinates,
                 dataSource: realData.dataSource,
                 confidence: realData.confidence,
                 lastUpdated: realData.lastUpdated
@@ -4592,6 +5018,12 @@
                 reportDisplay.innerHTML = reportHTML;
                 reportDisplay.classList.remove('hidden');
                 console.log('Report displayed successfully');
+                
+                // Store current property data for map initialization
+                window.currentPropertyData = property;
+                
+                // Initialize map after report is displayed
+                initializeMapAfterReport();
                 
                 // Smooth scroll to report
                 document.getElementById('reportDisplay').scrollIntoView({ 
