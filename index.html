@@ -216,25 +216,72 @@
                     </div>
                     
                     <form id="searchForm" class="space-y-6">
+                        <!-- Search Type Selection -->
+                        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Search Method</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
+                                    <input type="radio" name="searchType" value="address" checked class="text-blue-600 focus:ring-blue-500">
+                                    <div class="ml-3">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            <span class="text-sm font-medium text-gray-700">Property Address</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Search by street address</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
+                                    <input type="radio" name="searchType" value="parcel" class="text-blue-600 focus:ring-blue-500">
+                                    <div class="ml-3">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            <span class="text-sm font-medium text-gray-700">Parcel ID</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Search by APN/Parcel Number</p>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
+                                    <input type="radio" name="searchType" value="tax" class="text-blue-600 focus:ring-blue-500">
+                                    <div class="ml-3">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                            <span class="text-sm font-medium text-gray-700">Tax ID</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Search by Tax ID Number</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Search Input -->
                         <div class="relative">
-                            <label for="address" class="block text-sm font-semibold text-gray-700 mb-3">
+                            <label for="searchInput" id="searchLabel" class="block text-sm font-semibold text-gray-700 mb-3">
                                 Property Address
                             </label>
                             <div class="relative">
                                 <input
                                     type="text"
-                                    id="address"
+                                    id="searchInput"
                                     placeholder="Enter property address (e.g., 123 Main St, Anytown, USA)"
                                     class="input-modern w-full px-6 py-4 pl-14 pr-4 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-transparent outline-none transition-all duration-300 text-lg"
                                     autocomplete="address-line1"
                                     spellcheck="false"
                                 />
-                                <svg class="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg id="searchIcon" class="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
-                                <div id="addressSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 hidden mt-1 max-h-60 overflow-y-auto"></div>
+                                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 hidden mt-1 max-h-60 overflow-y-auto"></div>
                             </div>
-                            <div id="addressValidation" class="mt-2 text-sm"></div>
+                            <div id="searchValidation" class="mt-2 text-sm"></div>
                         </div>
                         
                         <!-- Advanced Search Options -->
@@ -297,16 +344,63 @@
                             <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Available Test Addresses
+                            Test Properties Available
                         </p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div class="flex items-center p-3 bg-white rounded-lg shadow-sm">
-                                <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                                <span class="text-sm font-medium text-gray-700">123 Main St, Anytown, USA</span>
+                        <div class="space-y-3">
+                            <!-- Property 1 -->
+                            <div class="bg-white rounded-lg p-4 shadow-sm">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                                    <span class="font-medium text-gray-800">Property 1: Clear Title</span>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                                    <div class="flex items-center">
+                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        </svg>
+                                        <span class="text-gray-600">123 Main St, Anytown, USA</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <span class="text-gray-600">Parcel: R12345-001-002</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        <span class="text-gray-600">Tax ID: TX-12345-001</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex items-center p-3 bg-white rounded-lg shadow-sm">
-                                <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                                <span class="text-sm font-medium text-gray-700">456 Oak Avenue, Springfield, IL</span>
+                            
+                            <!-- Property 2 -->
+                            <div class="bg-white rounded-lg p-4 shadow-sm">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                                    <span class="font-medium text-gray-800">Property 2: Issues Found</span>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                                    <div class="flex items-center">
+                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        </svg>
+                                        <span class="text-gray-600">456 Oak Avenue, Springfield, IL</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <span class="text-gray-600">Parcel: R67890-003-001</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                        </svg>
+                                        <span class="text-gray-600">Tax ID: TX-67890-003</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -421,6 +515,7 @@
         const mockProperties = {
             "123 Main St, Anytown, USA": {
                 parcelNumber: "R12345-001-002",
+                taxId: "TX-12345-001",
                 currentOwner: "John Doe and Jane Doe",
                 legalDescription: "LOT 1, BLOCK 2, ANYTOWN ESTATES, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 15, PAGE 42, OF THE PUBLIC RECORDS OF ANYCOUNTY, USA.",
                 propertySitus: "123 Main St, Anytown, USA",
@@ -442,6 +537,7 @@
             },
             "456 Oak Avenue, Springfield, IL": {
                 parcelNumber: "R67890-003-001",
+                taxId: "TX-67890-003",
                 currentOwner: "Sarah Williams",
                 legalDescription: "LOT 3, BLOCK 1, OAK GROVE SUBDIVISION, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 8, PAGE 15, OF THE PUBLIC RECORDS OF SPRINGFIELD COUNTY, ILLINOIS.",
                 propertySitus: "456 Oak Avenue, Springfield, IL",
@@ -469,6 +565,33 @@
                 if (key.toLowerCase().includes(normalizedAddress.split(',')[0]) || 
                     normalizedAddress.includes(key.toLowerCase().split(',')[0])) {
                     return { address: key, data: value };
+                }
+            }
+            return null;
+        }
+        
+        // Enhanced property lookup function for multiple search types
+        function findPropertyBySearchInput(searchInput, searchType) {
+            const normalizedInput = searchInput.toLowerCase().trim();
+            
+            for (const [key, value] of Object.entries(mockProperties)) {
+                switch (searchType) {
+                    case 'address':
+                        if (key.toLowerCase().includes(normalizedInput.split(',')[0]) || 
+                            normalizedInput.includes(key.toLowerCase().split(',')[0])) {
+                            return { address: key, data: value };
+                        }
+                        break;
+                    case 'parcel':
+                        if (value.parcelNumber.toLowerCase().includes(normalizedInput)) {
+                            return { address: key, data: value };
+                        }
+                        break;
+                    case 'tax':
+                        if (value.taxId && value.taxId.toLowerCase().includes(normalizedInput)) {
+                            return { address: key, data: value };
+                        }
+                        break;
                 }
             }
             return null;
@@ -919,6 +1042,16 @@
                     timestamp: Date.now() - this.startTime
                 });
             }
+            
+            trackSearch(searchInput, success, duration, searchType) {
+                this.trackEvent('search_performed', {
+                    searchInput: searchInput,
+                    searchType: searchType,
+                    success: success,
+                    duration: duration,
+                    timestamp: Date.now() - this.startTime
+                });
+            }
         }
         
         const analytics = new TitleGuardAnalytics();
@@ -926,64 +1059,137 @@
         // Advanced Search Features
         class AdvancedSearch {
             constructor() {
+                this.setupSearchTypeToggle();
                 this.setupAddressAutocomplete();
                 this.setupAdvancedOptions();
                 this.setupRealTimeValidation();
             }
             
-            setupAddressAutocomplete() {
-                const addressInput = document.getElementById('address');
-                const suggestionsDiv = document.getElementById('addressSuggestions');
+            setupSearchTypeToggle() {
+                const searchTypeRadios = document.querySelectorAll('input[name="searchType"]');
+                const searchLabel = document.getElementById('searchLabel');
+                const searchInput = document.getElementById('searchInput');
+                const searchIcon = document.getElementById('searchIcon');
                 
-                addressInput.addEventListener('input', (e) => {
+                searchTypeRadios.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        this.updateSearchInterface(radio.value);
+                    });
+                });
+            }
+            
+            updateSearchInterface(searchType) {
+                const searchLabel = document.getElementById('searchLabel');
+                const searchInput = document.getElementById('searchInput');
+                const searchIcon = document.getElementById('searchIcon');
+                
+                switch (searchType) {
+                    case 'address':
+                        searchLabel.textContent = 'Property Address';
+                        searchInput.placeholder = 'Enter property address (e.g., 123 Main St, Anytown, USA)';
+                        searchInput.setAttribute('autocomplete', 'address-line1');
+                        searchIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />';
+                        break;
+                    case 'parcel':
+                        searchLabel.textContent = 'Parcel ID (APN)';
+                        searchInput.placeholder = 'Enter parcel ID (e.g., R12345-001-002)';
+                        searchInput.setAttribute('autocomplete', 'off');
+                        searchIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+                        break;
+                    case 'tax':
+                        searchLabel.textContent = 'Tax ID Number';
+                        searchInput.placeholder = 'Enter tax ID (e.g., TX-12345-001)';
+                        searchInput.setAttribute('autocomplete', 'off');
+                        searchIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />';
+                        break;
+                }
+                
+                // Clear input and suggestions
+                searchInput.value = '';
+                document.getElementById('searchSuggestions').classList.add('hidden');
+                document.getElementById('searchValidation').innerHTML = '';
+            }
+            
+            setupAddressAutocomplete() {
+                const searchInput = document.getElementById('searchInput');
+                const suggestionsDiv = document.getElementById('searchSuggestions');
+                
+                searchInput.addEventListener('input', (e) => {
                     const query = e.target.value.toLowerCase();
+                    const searchType = document.querySelector('input[name="searchType"]:checked').value;
+                    
                     if (query.length < 2) {
                         suggestionsDiv.classList.add('hidden');
                         return;
                     }
                     
-                    const suggestions = this.getAddressSuggestions(query);
-                    this.displaySuggestions(suggestions);
+                    const suggestions = this.getSearchSuggestions(query, searchType);
+                    this.displaySuggestions(suggestions, searchType);
                 });
                 
                 // Hide suggestions when clicking outside
                 document.addEventListener('click', (e) => {
-                    if (!addressInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                    if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
                         suggestionsDiv.classList.add('hidden');
                     }
                 });
             }
             
-            getAddressSuggestions(query) {
-                const allAddresses = [
-                    '123 Main St, Anytown, USA',
-                    '456 Oak Avenue, Springfield, IL',
-                    '789 Pine Street, Chicago, IL',
-                    '321 Elm Drive, Los Angeles, CA',
-                    '654 Maple Lane, New York, NY'
-                ];
+            getSearchSuggestions(query, searchType) {
+                const suggestions = [];
                 
-                return allAddresses.filter(addr => 
-                    addr.toLowerCase().includes(query)
-                ).slice(0, 5);
+                for (const [address, data] of Object.entries(mockProperties)) {
+                    switch (searchType) {
+                        case 'address':
+                            if (address.toLowerCase().includes(query)) {
+                                suggestions.push({ type: 'address', value: address, display: address });
+                            }
+                            break;
+                        case 'parcel':
+                            if (data.parcelNumber.toLowerCase().includes(query)) {
+                                suggestions.push({ 
+                                    type: 'parcel', 
+                                    value: data.parcelNumber, 
+                                    display: `${data.parcelNumber} - ${address}` 
+                                });
+                            }
+                            break;
+                        case 'tax':
+                            if (data.taxId && data.taxId.toLowerCase().includes(query)) {
+                                suggestions.push({ 
+                                    type: 'tax', 
+                                    value: data.taxId, 
+                                    display: `${data.taxId} - ${address}` 
+                                });
+                            }
+                            break;
+                    }
+                }
+                
+                return suggestions.slice(0, 5);
             }
             
-            displaySuggestions(suggestions) {
-                const suggestionsDiv = document.getElementById('addressSuggestions');
+            displaySuggestions(suggestions, searchType) {
+                const suggestionsDiv = document.getElementById('searchSuggestions');
                 
                 if (suggestions.length === 0) {
                     suggestionsDiv.classList.add('hidden');
                     return;
                 }
                 
-                suggestionsDiv.innerHTML = suggestions.map(addr => `
-                    <div class="px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0" onclick="selectSuggestion('${addr}')">
+                const iconMap = {
+                    address: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />',
+                    parcel: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />',
+                    tax: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />'
+                };
+                
+                suggestionsDiv.innerHTML = suggestions.map(suggestion => `
+                    <div class="px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0" onclick="selectSuggestion('${suggestion.value}', '${suggestion.type}')">
                         <div class="flex items-center">
                             <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                ${iconMap[suggestion.type]}
                             </svg>
-                            <span class="text-sm text-gray-700">${addr}</span>
+                            <span class="text-sm text-gray-700">${suggestion.display}</span>
                         </div>
                     </div>
                 `).join('');
@@ -1013,11 +1219,12 @@
             }
             
             setupRealTimeValidation() {
-                const addressInput = document.getElementById('address');
-                const validationDiv = document.getElementById('addressValidation');
+                const searchInput = document.getElementById('searchInput');
+                const validationDiv = document.getElementById('searchValidation');
                 
-                addressInput.addEventListener('input', () => {
-                    const validation = validateAddress(addressInput.value);
+                searchInput.addEventListener('input', () => {
+                    const searchType = document.querySelector('input[name="searchType"]:checked').value;
+                    const validation = validateSearchInput(searchInput.value, searchType);
                     this.displayValidation(validation, validationDiv);
                 });
             }
@@ -1037,10 +1244,10 @@
         const advancedSearch = new AdvancedSearch();
         
         // Global function for suggestion selection
-        window.selectSuggestion = function(address) {
-            document.getElementById('address').value = address;
-            document.getElementById('addressSuggestions').classList.add('hidden');
-            analytics.trackEvent('address_suggestion_selected', { address: address });
+        window.selectSuggestion = function(value, type) {
+            document.getElementById('searchInput').value = value;
+            document.getElementById('searchSuggestions').classList.add('hidden');
+            analytics.trackEvent('search_suggestion_selected', { value: value, type: type });
         };
         
         // Advanced Error Handling
@@ -1101,15 +1308,39 @@
         }
         
         // Enhanced Form Validation
-        function validateAddress(address) {
+        function validateSearchInput(input, searchType) {
             const errors = [];
+            const trimmedInput = input.trim();
             
-            if (!address || address.trim().length === 0) {
-                errors.push('Please enter a property address');
-            } else if (address.length < 5) {
-                errors.push('Address must be at least 5 characters long');
-            } else if (!/^[a-zA-Z0-9\s,.-]+$/.test(address)) {
-                errors.push('Address contains invalid characters');
+            if (!trimmedInput) {
+                errors.push(`Please enter a ${searchType === 'address' ? 'property address' : searchType === 'parcel' ? 'parcel ID' : 'tax ID'}`);
+                return { isValid: false, errors };
+            }
+            
+            switch (searchType) {
+                case 'address':
+                    if (trimmedInput.length < 5) {
+                        errors.push('Address must be at least 5 characters long');
+                    } else if (!/^[a-zA-Z0-9\s,.-]+$/.test(trimmedInput)) {
+                        errors.push('Address contains invalid characters');
+                    }
+                    break;
+                    
+                case 'parcel':
+                    if (!/^[A-Z0-9-]+$/i.test(trimmedInput)) {
+                        errors.push('Parcel ID must contain only letters, numbers, and hyphens');
+                    } else if (trimmedInput.length < 3) {
+                        errors.push('Parcel ID must be at least 3 characters long');
+                    }
+                    break;
+                    
+                case 'tax':
+                    if (!/^[A-Z0-9-]+$/i.test(trimmedInput)) {
+                        errors.push('Tax ID must contain only letters, numbers, and hyphens');
+                    } else if (trimmedInput.length < 3) {
+                        errors.push('Tax ID must be at least 3 characters long');
+                    }
+                    break;
             }
             
             return {
@@ -1118,15 +1349,34 @@
             };
         }
         
+        // Legacy function for backward compatibility
+        function validateAddress(address) {
+            return validateSearchInput(address, 'address');
+        }
+        
         // Enhanced Search with Progress Tracking
-        function performSearch(address) {
+        function performSearch(searchInput, searchType) {
             const startTime = Date.now();
             
             return new Promise((resolve, reject) => {
-                // Simulate realistic search phases
-                const phases = [
+                // Simulate realistic search phases based on search type
+                const phases = searchType === 'address' ? [
                     { name: 'Connecting to databases...', duration: 500 },
                     { name: 'Retrieving property information...', duration: 800 },
+                    { name: 'Analyzing chain of title...', duration: 1000 },
+                    { name: 'Searching encumbrances...', duration: 700 },
+                    { name: 'Generating report...', duration: 500 }
+                ] : searchType === 'parcel' ? [
+                    { name: 'Connecting to assessor database...', duration: 400 },
+                    { name: 'Looking up parcel information...', duration: 600 },
+                    { name: 'Retrieving property details...', duration: 500 },
+                    { name: 'Analyzing chain of title...', duration: 1000 },
+                    { name: 'Searching encumbrances...', duration: 700 },
+                    { name: 'Generating report...', duration: 500 }
+                ] : [
+                    { name: 'Connecting to tax database...', duration: 400 },
+                    { name: 'Looking up tax ID information...', duration: 600 },
+                    { name: 'Retrieving property details...', duration: 500 },
                     { name: 'Analyzing chain of title...', duration: 1000 },
                     { name: 'Searching encumbrances...', duration: 700 },
                     { name: 'Generating report...', duration: 500 }
@@ -1144,14 +1394,14 @@
                             updateProgress();
                         }, phase.duration);
                     } else {
-                        const property = findPropertyByAddress(address);
+                        const property = findPropertyBySearchInput(searchInput, searchType);
                         const duration = Date.now() - startTime;
                         
                         if (property) {
-                            analytics.trackSearch(address, true, duration);
+                            analytics.trackSearch(searchInput, true, duration, searchType);
                             resolve({ property, duration });
                         } else {
-                            analytics.trackSearch(address, false, duration);
+                            analytics.trackSearch(searchInput, false, duration, searchType);
                             reject(new Error('Property not found'));
                         }
                     }
@@ -1186,10 +1436,11 @@
         document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const address = document.getElementById('address').value.trim();
+            const searchInput = document.getElementById('searchInput').value.trim();
+            const searchType = document.querySelector('input[name="searchType"]:checked').value;
             
             // Validate input
-            const validation = validateAddress(address);
+            const validation = validateSearchInput(searchInput, searchType);
             if (!validation.isValid) {
                 validation.errors.forEach(error => {
                     ErrorHandler.showError(error, 'error');
@@ -1198,11 +1449,11 @@
             }
             
             try {
-                const result = await performSearch(address);
+                const result = await performSearch(searchInput, searchType);
                 const { property, duration } = result;
                 
                 // Generate and display report
-                const reportHTML = generateReportHTML(property.data, address);
+                const reportHTML = generateReportHTML(property.data, property.address);
                 document.getElementById('reportDisplay').innerHTML = reportHTML;
                 document.getElementById('reportDisplay').classList.remove('hidden');
                 
@@ -1216,8 +1467,14 @@
                 ErrorHandler.showError(`Search completed successfully in ${(duration/1000).toFixed(1)}s`, 'success');
                 
             } catch (error) {
+                const testExamples = searchType === 'address' ? 
+                    '• 123 Main St, Anytown, USA\n• 456 Oak Avenue, Springfield, IL' :
+                    searchType === 'parcel' ?
+                    '• R12345-001-002\n• R67890-003-001' :
+                    '• TX-12345-001\n• TX-67890-003';
+                
                 ErrorHandler.showError(
-                    'Property not found. Please try one of the test addresses:\n• 123 Main St, Anytown, USA\n• 456 Oak Avenue, Springfield, IL',
+                    `Property not found. Please try one of the test ${searchType === 'address' ? 'addresses' : searchType === 'parcel' ? 'parcel IDs' : 'tax IDs'}:\n${testExamples}`,
                     'warning'
                 );
             }
