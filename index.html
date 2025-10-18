@@ -32,16 +32,134 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        
+        /* Modern gradient backgrounds */
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Glass morphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        /* Modern shadows */
+        .shadow-modern {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .shadow-glow {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Smooth animations */
+        .transition-all {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Modern button hover effects */
+        .btn-modern {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Modern input focus */
+        .input-modern:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+        }
+        
+        /* Status indicators */
+        .status-clear {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .status-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .status-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <header class="gradient-bg relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-10"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="text-center">
-                <h1 class="text-3xl font-bold text-gray-900">TitleGuard AI</h1>
-                <p class="text-lg text-gray-600 mt-2">Digital Title Abstractor and Real Estate Data Analyst</p>
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-full mb-6">
+                    <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h1 class="text-5xl font-bold text-white mb-4">TitleGuard AI</h1>
+                <p class="text-xl text-white text-opacity-90 mb-6">Digital Title Abstractor and Real Estate Data Analyst</p>
+                <div class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 rounded-full text-white text-sm font-medium">
+                    <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Powered by Advanced AI Technology
+                </div>
             </div>
+        </div>
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-white bg-opacity-5 rounded-full"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white bg-opacity-5 rounded-full"></div>
         </div>
     </header>
 
@@ -49,11 +167,16 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div id="app">
             <!-- Search Form -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+            <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 mb-8 card-hover">
                 <div class="w-full max-w-2xl mx-auto">
-                    <form id="searchForm" class="space-y-4">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Start Your Title Search</h2>
+                        <p class="text-gray-600">Enter a property address to begin comprehensive title analysis</p>
+                    </div>
+                    
+                    <form id="searchForm" class="space-y-6">
                         <div class="relative">
-                            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="address" class="block text-sm font-semibold text-gray-700 mb-3">
                                 Property Address
                             </label>
                             <div class="relative">
@@ -61,9 +184,9 @@
                                     type="text"
                                     id="address"
                                     placeholder="Enter property address (e.g., 123 Main St, Anytown, USA)"
-                                    class="w-full px-4 py-3 pl-12 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                    class="input-modern w-full px-6 py-4 pl-14 pr-4 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-transparent outline-none transition-all duration-300 text-lg"
                                 />
-                                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg class="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
@@ -72,39 +195,95 @@
                         <button
                             type="submit"
                             id="searchBtn"
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                            class="btn-modern w-full gradient-bg hover:shadow-glow text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 text-lg"
                         >
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             <span>Search Title</span>
                         </button>
                     </form>
                     
-                    <div class="mt-4 text-sm text-gray-600">
-                        <p class="font-medium mb-2">Available test addresses:</p>
-                        <ul class="space-y-1 text-xs">
-                            <li>• 123 Main St, Anytown, USA</li>
-                            <li>• 456 Oak Avenue, Springfield, IL</li>
-                        </ul>
+                    <div class="mt-8 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+                        <p class="font-semibold text-gray-800 mb-3 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Available Test Addresses
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="flex items-center p-3 bg-white rounded-lg shadow-sm">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700">123 Main St, Anytown, USA</span>
+                            </div>
+                            <div class="flex items-center p-3 bg-white rounded-lg shadow-sm">
+                                <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700">456 Oak Avenue, Springfield, IL</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Instructions -->
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-                <h2 class="text-lg font-semibold text-blue-900 mb-3">How to Use TitleGuard AI</h2>
-                <div class="text-sm text-blue-800 space-y-2">
-                    <p>1. Enter a property address in the search field above</p>
-                    <p>2. The system will perform a comprehensive title search including:</p>
-                    <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
-                        <li>Property ownership verification</li>
-                        <li>50-year chain of title analysis</li>
-                        <li>Encumbrance and lien search</li>
-                        <li>Tax status verification</li>
-                    </ul>
-                    <p>3. Review the generated preliminary title report</p>
-                    <p>4. Export the report as PDF for your records</p>
+            <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 rounded-2xl p-8 mb-8 card-hover">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">How TitleGuard AI Works</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="flex items-start space-x-3">
+                                    <div class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                                    <p class="text-gray-700 font-medium">Enter a property address in the search field above</p>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <div class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                                    <p class="text-gray-700 font-medium">AI performs comprehensive analysis including:</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-gray-700">Property ownership verification</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-gray-700">50-year chain of title analysis</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-gray-700">Encumbrance and lien search</span>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-gray-700">Tax status verification</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                            <p class="text-gray-700 font-medium">Review the generated preliminary title report</p>
+                        </div>
+                        <div class="mt-3 flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                            <p class="text-gray-700 font-medium">Export the report as PDF for your records</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -116,15 +295,34 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="text-center text-sm text-gray-500">
-                <p>TitleGuard AI - Automated Title Search Assistant</p>
-                <p class="mt-2">This tool is for informational purposes only and does not provide legal advice or title insurance.</p>
-                <div class="mt-4 flex justify-center space-x-4">
-                    <a href="https://github.com/washingtonwizkidspodcast-gif/Title-Guard" class="text-blue-600 hover:text-blue-800">GitHub Repository</a>
-                    <span>•</span>
-                    <a href="https://netlify.com" class="text-blue-600 hover:text-blue-800">Deployed on Netlify</a>
+    <footer class="gradient-bg mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-white bg-opacity-20 rounded-full mb-4">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">TitleGuard AI</h3>
+                <p class="text-white text-opacity-80 mb-6">Automated Title Search Assistant</p>
+                <p class="text-white text-opacity-70 text-sm mb-6 max-w-2xl mx-auto">
+                    This tool is for informational purposes only and does not provide legal advice or title insurance. 
+                    All findings must be verified by qualified professionals before any real estate transaction.
+                </p>
+                <div class="flex justify-center space-x-6">
+                    <a href="https://github.com/washingtonwizkidspodcast-gif/Title-Guard" class="text-white text-opacity-80 hover:text-opacity-100 transition-all duration-300 flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span>GitHub</span>
+                    </a>
+                    <span class="text-white text-opacity-50">•</span>
+                    <a href="https://netlify.com" class="text-white text-opacity-80 hover:text-opacity-100 transition-all duration-300 flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.5 0C2.91 0 0 2.91 0 6.5c0 1.77.74 3.37 1.93 4.5L12 23l10.07-12c1.19-1.13 1.93-2.73 1.93-4.5C24 2.91 21.09 0 17.5 0S11 2.91 11 6.5c0 .5.07 1 .2 1.47L12 12l.8-4.03c.13-.47.2-.97.2-1.47C13 2.91 10.09 0 6.5 0z"/>
+                        </svg>
+                        <span>Netlify</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -242,9 +440,9 @@
             const chainAnalysis = analyzeChainOfTitle(reportData.ownershipChain);
 
             return `
-                <div class="max-w-4xl mx-auto space-y-6">
+                <div class="max-w-4xl mx-auto space-y-8">
                     <!-- Report Header -->
-                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
                         <div class="text-center">
                             <h1 class="text-2xl font-bold text-gray-900 mb-2 flex items-center justify-center">
                                 <svg class="h-8 w-8 mr-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -279,7 +477,7 @@
                     </div>
 
                     <!-- Export Buttons -->
-                    <div class="bg-white rounded-lg border border-gray-200 p-4">
+                    <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-6 card-hover">
                         <div class="flex flex-wrap gap-3">
                             <button onclick="exportToPDF('${address}')" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                 <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -291,7 +489,7 @@
                     </div>
 
                     <!-- Executive Summary -->
-                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="bg-white rounded-2xl shadow-modern border border-gray-100 p-8 card-hover">
                         <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                             <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -465,11 +663,11 @@
         function getTitleConditionColor(condition) {
             switch (condition) {
                 case 'Appears Clear':
-                    return 'text-green-600 bg-green-50';
+                    return 'status-clear text-white';
                 case 'Exceptions Found':
-                    return 'text-yellow-600 bg-yellow-50';
+                    return 'status-warning text-white';
                 case 'Significant Clouds Detected - Professional Review Required':
-                    return 'text-red-600 bg-red-50';
+                    return 'status-danger text-white';
                 default:
                     return 'text-gray-600 bg-gray-50';
             }
