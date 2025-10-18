@@ -12,8 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
-    <!-- Google Maps API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry&callback=initMap"></script>
+    <!-- Google Maps API - Will be loaded dynamically with user's API key -->
     <meta name="description" content="Revolutionary AI-powered real estate intelligence platform. Instant property analysis, investment insights, market predictions, and comprehensive title searches. The future of real estate data.">
     <meta name="keywords" content="real estate intelligence, property analysis, investment insights, market predictions, title search, real estate AI, property data, market analytics, real estate technology">
     <meta name="author" content="TitleGuard AI">
@@ -4292,9 +4291,9 @@
                 // Reinitialize data manager with new keys
                 realDataManager.apiKeys = this.getApiKeys();
                 
-                // Update Google Maps API key if provided
-                if (googleMapsKey && googleMapsKey !== 'YOUR_GOOGLE_MAPS_API_KEY') {
-                    updateGoogleMapsAPIKey(googleMapsKey);
+                // Load Google Maps API if key is provided
+                if (googleMapsKey && googleMapsKey.trim() !== '') {
+                    loadGoogleMapsAPI(googleMapsKey);
                 }
             }
         };
@@ -4303,13 +4302,56 @@
         const realDataManager = new RealDataManager();
         realDataManager.apiKeys = API_CONFIG.getApiKeys();
         
+        // Check if Google Maps API key is already configured and load it
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedGoogleMapsKey = API_CONFIG.getApiKey('GOOGLE_MAPS_API_KEY');
+            if (savedGoogleMapsKey && savedGoogleMapsKey !== 'YOUR_GOOGLE_MAPS_API_KEY') {
+                console.log('🗺️ Found saved Google Maps API key, loading...');
+                loadGoogleMapsAPI(savedGoogleMapsKey);
+            }
+        });
+        
         // GOOGLE MAPS INTEGRATION
         let propertyMap = null;
         let mapMarkers = [];
+        let googleMapsLoaded = false;
+        
+        // Load Google Maps API
+        function loadGoogleMapsAPI(apiKey) {
+            if (googleMapsLoaded) {
+                console.log('🗺️ Google Maps already loaded');
+                return;
+            }
+            
+            console.log('🗺️ Loading Google Maps API with key:', apiKey.substring(0, 10) + '...');
+            
+            // Remove existing script if any
+            const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+            if (existingScript) {
+                existingScript.remove();
+            }
+            
+            // Create new script
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                console.log('🗺️ Google Maps API loaded successfully');
+                googleMapsLoaded = true;
+            };
+            script.onerror = () => {
+                console.error('🗺️ Failed to load Google Maps API');
+                showNotification('Failed to load Google Maps API. Please check your API key.', 'error');
+            };
+            
+            document.head.appendChild(script);
+        }
         
         // Initialize Google Maps
         function initMap() {
             console.log('🗺️ Google Maps initialized');
+            googleMapsLoaded = true;
             // Map will be created when property data is loaded
         }
         
@@ -4565,19 +4607,92 @@
             // Wait for DOM to be ready
             setTimeout(() => {
                 const mapElement = document.getElementById('propertyMap');
-                if (mapElement && window.google && window.google.maps) {
-                    // Hide loading overlay
-                    const loadingOverlay = document.getElementById('mapLoadingOverlay');
-                    if (loadingOverlay) {
-                        loadingOverlay.style.display = 'none';
-                    }
-                    
-                    // Initialize map if we have property data
-                    if (window.currentPropertyData && window.currentPropertyData.coordinates) {
-                        updatePropertyMap(window.currentPropertyData);
-                    }
+                if (!mapElement) {
+                    console.log('🗺️ Map element not found');
+                    return;
+                }
+                
+                // Check if Google Maps is loaded
+                if (!googleMapsLoaded || !window.google || !window.google.maps) {
+                    console.log('🗺️ Google Maps not loaded yet, showing fallback');
+                    showMapFallback();
+                    return;
+                }
+                
+                // Hide loading overlay
+                const loadingOverlay = document.getElementById('mapLoadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+                
+                // Initialize map if we have property data
+                if (window.currentPropertyData && window.currentPropertyData.coordinates) {
+                    updatePropertyMap(window.currentPropertyData);
                 }
             }, 1000);
+        }
+        
+        // Show map fallback when Google Maps is not available
+        function showMapFallback() {
+            const mapElement = document.getElementById('propertyMap');
+            if (!mapElement) return;
+            
+            mapElement.innerHTML = `
+                <div class="w-full h-96 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <div class="text-center p-8">
+                        <div class="text-gray-500 mb-4">
+                            <svg class="h-16 w-16 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Interactive Map Not Available</h3>
+                        <p class="text-gray-600 mb-4">Configure your Google Maps API key to enable interactive maps</p>
+                        <button onclick="API_CONFIG.showConfigDialog()" 
+                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Configure API Keys
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${
+                type === 'success' ? 'bg-green-500 text-white' :
+                type === 'error' ? 'bg-red-500 text-white' :
+                type === 'warning' ? 'bg-yellow-500 text-black' :
+                'bg-blue-500 text-white'
+            }`;
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        ${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium">${message}</p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-white hover:text-gray-200">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
         }
 
         // Legacy function for backward compatibility
