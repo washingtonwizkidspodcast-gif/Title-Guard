@@ -2548,11 +2548,22 @@
         }
         
         // Enhanced Form Submission Handler
-        document.getElementById('searchForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            if (!searchForm) {
+                console.error('Search form not found!');
+                return;
+            }
             
-            const addressInput = document.getElementById('addressInput').value.trim();
-            const taxIdInput = document.getElementById('taxIdInput').value.trim();
+            searchForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                console.log('Form submitted!');
+                
+                const addressInput = document.getElementById('addressInput').value.trim();
+                const taxIdInput = document.getElementById('taxIdInput').value.trim();
+                
+                console.log('Address input:', addressInput);
+                console.log('Tax ID input:', taxIdInput);
             
             // Determine which input has a value
             let searchInput, searchType;
@@ -2607,6 +2618,7 @@
                     'warning'
                 );
             }
+        });
         });
     </script>
 </body>
