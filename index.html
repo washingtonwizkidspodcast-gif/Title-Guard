@@ -219,7 +219,7 @@
                         <!-- Search Type Selection -->
                         <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100">
                             <h3 class="text-sm font-semibold text-gray-700 mb-3">Search Method</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
                                     <input type="radio" name="searchType" value="address" checked class="text-blue-600 focus:ring-blue-500">
                                     <div class="ml-3">
@@ -235,19 +235,6 @@
                                 </label>
                                 
                                 <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
-                                    <input type="radio" name="searchType" value="parcel" class="text-blue-600 focus:ring-blue-500">
-                                    <div class="ml-3">
-                                        <div class="flex items-center">
-                                            <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <span class="text-sm font-medium text-gray-700">Parcel ID</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Search by APN/Parcel Number</p>
-                                    </div>
-                                </label>
-                                
-                                <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
                                     <input type="radio" name="searchType" value="tax" class="text-blue-600 focus:ring-blue-500">
                                     <div class="ml-3">
                                         <div class="flex items-center">
@@ -256,7 +243,7 @@
                                             </svg>
                                             <span class="text-sm font-medium text-gray-700">Tax ID</span>
                                         </div>
-                                        <p class="text-xs text-gray-500 mt-1">Search by Tax ID Number</p>
+                                        <p class="text-xs text-gray-500 mt-1">Search by Tax ID/Parcel Number</p>
                                     </div>
                                 </label>
                             </div>
@@ -353,7 +340,7 @@
                                     <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                                     <span class="font-medium text-gray-800">Property 1: Clear Title</span>
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                                     <div class="flex items-center">
                                         <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -362,15 +349,9 @@
                                     </div>
                                     <div class="flex items-center">
                                         <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                        <span class="text-gray-600">Parcel: R12345-001-002</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                         </svg>
-                                        <span class="text-gray-600">Tax ID: TX-12345-001</span>
+                                        <span class="text-gray-600">Tax ID: R12345-001-002</span>
                                     </div>
                                 </div>
                             </div>
@@ -381,7 +362,7 @@
                                     <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
                                     <span class="font-medium text-gray-800">Property 2: Issues Found</span>
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                                     <div class="flex items-center">
                                         <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -390,15 +371,9 @@
                                     </div>
                                     <div class="flex items-center">
                                         <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                        <span class="text-gray-600">Parcel: R67890-003-001</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <svg class="w-3 h-3 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                         </svg>
-                                        <span class="text-gray-600">Tax ID: TX-67890-003</span>
+                                        <span class="text-gray-600">Tax ID: R67890-003-001</span>
                                     </div>
                                 </div>
                             </div>
@@ -582,13 +557,10 @@
                             return { address: key, data: value };
                         }
                         break;
-                    case 'parcel':
-                        if (value.parcelNumber.toLowerCase().includes(normalizedInput)) {
-                            return { address: key, data: value };
-                        }
-                        break;
                     case 'tax':
-                        if (value.taxId && value.taxId.toLowerCase().includes(normalizedInput)) {
+                        // Search both parcel number and tax ID
+                        if (value.parcelNumber.toLowerCase().includes(normalizedInput) ||
+                            (value.taxId && value.taxId.toLowerCase().includes(normalizedInput))) {
                             return { address: key, data: value };
                         }
                         break;
@@ -1090,18 +1062,12 @@
                         searchInput.setAttribute('autocomplete', 'address-line1');
                         searchIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />';
                         break;
-                    case 'parcel':
-                        searchLabel.textContent = 'Parcel ID (APN)';
-                        searchInput.placeholder = 'Enter parcel ID (e.g., R12345-001-002)';
-                        searchInput.setAttribute('autocomplete', 'off');
-                        searchIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
-                        break;
-                    case 'tax':
-                        searchLabel.textContent = 'Tax ID Number';
-                        searchInput.placeholder = 'Enter tax ID (e.g., TX-12345-001)';
-                        searchInput.setAttribute('autocomplete', 'off');
-                        searchIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />';
-                        break;
+                case 'tax':
+                    searchLabel.textContent = 'Tax ID / Parcel Number';
+                    searchInput.placeholder = 'Enter Tax ID or Parcel Number (e.g., R12345-001-002)';
+                    searchInput.setAttribute('autocomplete', 'off');
+                    searchIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />';
+                    break;
                 }
                 
                 // Clear input and suggestions
@@ -1145,21 +1111,14 @@
                                 suggestions.push({ type: 'address', value: address, display: address });
                             }
                             break;
-                        case 'parcel':
-                            if (data.parcelNumber.toLowerCase().includes(query)) {
-                                suggestions.push({ 
-                                    type: 'parcel', 
-                                    value: data.parcelNumber, 
-                                    display: `${data.parcelNumber} - ${address}` 
-                                });
-                            }
-                            break;
                         case 'tax':
-                            if (data.taxId && data.taxId.toLowerCase().includes(query)) {
+                            // Search both parcel number and tax ID
+                            if (data.parcelNumber.toLowerCase().includes(query) || 
+                                (data.taxId && data.taxId.toLowerCase().includes(query))) {
                                 suggestions.push({ 
                                     type: 'tax', 
-                                    value: data.taxId, 
-                                    display: `${data.taxId} - ${address}` 
+                                    value: data.parcelNumber, // Use parcel number as primary identifier
+                                    display: `${data.parcelNumber} - ${address}` 
                                 });
                             }
                             break;
@@ -1179,7 +1138,6 @@
                 
                 const iconMap = {
                     address: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />',
-                    parcel: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />',
                     tax: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />'
                 };
                 
@@ -1313,7 +1271,7 @@
             const trimmedInput = input.trim();
             
             if (!trimmedInput) {
-                errors.push(`Please enter a ${searchType === 'address' ? 'property address' : searchType === 'parcel' ? 'parcel ID' : 'tax ID'}`);
+                errors.push(`Please enter a ${searchType === 'address' ? 'property address' : 'tax ID or parcel number'}`);
                 return { isValid: false, errors };
             }
             
@@ -1326,19 +1284,11 @@
                     }
                     break;
                     
-                case 'parcel':
-                    if (!/^[A-Z0-9-]+$/i.test(trimmedInput)) {
-                        errors.push('Parcel ID must contain only letters, numbers, and hyphens');
-                    } else if (trimmedInput.length < 3) {
-                        errors.push('Parcel ID must be at least 3 characters long');
-                    }
-                    break;
-                    
                 case 'tax':
                     if (!/^[A-Z0-9-]+$/i.test(trimmedInput)) {
-                        errors.push('Tax ID must contain only letters, numbers, and hyphens');
+                        errors.push('Tax ID/Parcel Number must contain only letters, numbers, and hyphens');
                     } else if (trimmedInput.length < 3) {
-                        errors.push('Tax ID must be at least 3 characters long');
+                        errors.push('Tax ID/Parcel Number must be at least 3 characters long');
                     }
                     break;
             }
@@ -1366,16 +1316,9 @@
                     { name: 'Analyzing chain of title...', duration: 1000 },
                     { name: 'Searching encumbrances...', duration: 700 },
                     { name: 'Generating report...', duration: 500 }
-                ] : searchType === 'parcel' ? [
-                    { name: 'Connecting to assessor database...', duration: 400 },
-                    { name: 'Looking up parcel information...', duration: 600 },
-                    { name: 'Retrieving property details...', duration: 500 },
-                    { name: 'Analyzing chain of title...', duration: 1000 },
-                    { name: 'Searching encumbrances...', duration: 700 },
-                    { name: 'Generating report...', duration: 500 }
                 ] : [
-                    { name: 'Connecting to tax database...', duration: 400 },
-                    { name: 'Looking up tax ID information...', duration: 600 },
+                    { name: 'Connecting to tax/assessor database...', duration: 400 },
+                    { name: 'Looking up tax ID/parcel information...', duration: 600 },
                     { name: 'Retrieving property details...', duration: 500 },
                     { name: 'Analyzing chain of title...', duration: 1000 },
                     { name: 'Searching encumbrances...', duration: 700 },
@@ -1469,12 +1412,10 @@
             } catch (error) {
                 const testExamples = searchType === 'address' ? 
                     '• 123 Main St, Anytown, USA\n• 456 Oak Avenue, Springfield, IL' :
-                    searchType === 'parcel' ?
-                    '• R12345-001-002\n• R67890-003-001' :
-                    '• TX-12345-001\n• TX-67890-003';
+                    '• R12345-001-002\n• R67890-003-001';
                 
                 ErrorHandler.showError(
-                    `Property not found. Please try one of the test ${searchType === 'address' ? 'addresses' : searchType === 'parcel' ? 'parcel IDs' : 'tax IDs'}:\n${testExamples}`,
+                    `Property not found. Please try one of the test ${searchType === 'address' ? 'addresses' : 'tax IDs/parcel numbers'}:\n${testExamples}`,
                     'warning'
                 );
             }
