@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TitleGuard AI - Title Search Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-gray-900">TitleGuard AI</h1>
+                <p class="text-lg text-gray-600 mt-2">Digital Title Abstractor and Real Estate Data Analyst</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="app">
+            <!-- Search Form -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+                <div class="w-full max-w-2xl mx-auto">
+                    <form id="searchForm" class="space-y-4">
+                        <div class="relative">
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                                Property Address
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="text"
+                                    id="address"
+                                    placeholder="Enter property address (e.g., 123 Main St, Anytown, USA)"
+                                    class="w-full px-4 py-3 pl-12 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                />
+                                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <button
+                            type="submit"
+                            id="searchBtn"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                        >
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <span>Search Title</span>
+                        </button>
+                    </form>
+                    
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p class="font-medium mb-2">Available test addresses:</p>
+                        <ul class="space-y-1 text-xs">
+                            <li>• 123 Main St, Anytown, USA</li>
+                            <li>• 456 Oak Avenue, Springfield, IL</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+                <h2 class="text-lg font-semibold text-blue-900 mb-3">How to Use TitleGuard AI</h2>
+                <div class="text-sm text-blue-800 space-y-2">
+                    <p>1. Enter a property address in the search field above</p>
+                    <p>2. The system will perform a comprehensive title search including:</p>
+                    <ul class="list-disc list-inside ml-4 mt-2 space-y-1">
+                        <li>Property ownership verification</li>
+                        <li>50-year chain of title analysis</li>
+                        <li>Encumbrance and lien search</li>
+                        <li>Tax status verification</li>
+                    </ul>
+                    <p>3. Review the generated preliminary title report</p>
+                    <p>4. Export the report as PDF for your records</p>
+                </div>
+            </div>
+
+            <!-- Report Display (Hidden Initially) -->
+            <div id="reportDisplay" class="hidden">
+                <!-- Report content will be generated here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center text-sm text-gray-500">
+                <p>TitleGuard AI - Automated Title Search Assistant</p>
+                <p class="mt-2">This tool is for informational purposes only and does not provide legal advice or title insurance.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mock data for different properties
+        const mockProperties = {
+            "123 Main St, Anytown, USA": {
+                parcelNumber: "R12345-001-002",
+                currentOwner: "John Doe and Jane Doe",
+                legalDescription: "LOT 1, BLOCK 2, ANYTOWN ESTATES, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 15, PAGE 42, OF THE PUBLIC RECORDS OF ANYCOUNTY, USA.",
+                propertySitus: "123 Main St, Anytown, USA",
+                ownershipChain: [
+                    { owner: "John Doe and Jane Doe", from: "Robert Seller", deedType: "Warranty Deed", date: "2023-05-15", docNum: "2023-00456" },
+                    { owner: "Robert Seller", from: "Emily Investor", deedType: "Grant Deed", date: "2010-03-22", docNum: "2010-00123" },
+                    { owner: "Emily Investor", from: "Historic Holdings LLC", deedType: "Warranty Deed", date: "1995-08-10", docNum: "1995-00567" },
+                    { owner: "Historic Holdings LLC", from: "Margaret Johnson", deedType: "Quitclaim Deed", date: "1978-12-05", docNum: "1978-00890" },
+                    { owner: "Margaret Johnson", from: "William Johnson", deedType: "Warranty Deed", date: "1965-04-18", docNum: "1965-00234" }
+                ],
+                encumbrances: [
+                    { type: "Mortgage", parties: ["John Doe and Jane Doe", "Big Bank Inc."], date: "2023-05-15", docNum: "2023-00457", status: "Potentially Open" },
+                    { type: "Utility Easement", parties: ["Electric Company"], date: "2010-05-15", docNum: "2010-00189", status: "Active", description: "Grants access to the rear 10 feet of the property" },
+                    { type: "Federal Tax Lien", parties: ["IRS", "Emily Investor"], date: "2012-08-01", docNum: "2012-00987", status: "Potentially Open", amount: "$15,200" }
+                ],
+                taxStatus: "Paid",
+                amountOwed: "0.00",
+                taxLiens: "None"
+            },
+            "456 Oak Avenue, Springfield, IL": {
+                parcelNumber: "R67890-003-001",
+                currentOwner: "Sarah Williams",
+                legalDescription: "LOT 3, BLOCK 1, OAK GROVE SUBDIVISION, ACCORDING TO THE PLAT THEREOF, AS RECORDED IN PLAT BOOK 8, PAGE 15, OF THE PUBLIC RECORDS OF SPRINGFIELD COUNTY, ILLINOIS.",
+                propertySitus: "456 Oak Avenue, Springfield, IL",
+                ownershipChain: [
+                    { owner: "Sarah Williams", from: "Michael Thompson", deedType: "Warranty Deed", date: "2021-09-12", docNum: "2021-00789" },
+                    { owner: "Michael Thompson", from: "Linda Davis", deedType: "Grant Deed", date: "2005-11-30", docNum: "2005-00456" },
+                    { owner: "Linda Davis", from: "James Davis", deedType: "Warranty Deed", date: "1988-07-14", docNum: "1988-00234" },
+                    { owner: "James Davis", from: "Estate of Robert Davis", deedType: "Personal Representative Deed", date: "1972-03-08", docNum: "1972-00112" }
+                ],
+                encumbrances: [
+                    { type: "Mortgage", parties: ["Sarah Williams", "First National Bank"], date: "2021-09-12", docNum: "2021-00790", status: "Potentially Open" },
+                    { type: "HOA Lien", parties: ["Oak Grove HOA", "Sarah Williams"], date: "2023-01-15", docNum: "2023-00045", status: "Potentially Open", amount: "$2,400" },
+                    { type: "Mechanic's Lien", parties: ["ABC Construction", "Linda Davis"], date: "1990-05-20", docNum: "1990-00123", status: "Potentially Open", amount: "$8,500" }
+                ],
+                taxStatus: "Delinquent",
+                amountOwed: "3,247.50",
+                taxLiens: "Tax lien filed 2023-03-01, Document #2023-00156"
+            }
+        };
+
+        // Find property by address
+        function findPropertyByAddress(address) {
+            const normalizedAddress = address.toLowerCase().trim();
+            for (const [key, value] of Object.entries(mockProperties)) {
+                if (key.toLowerCase().includes(normalizedAddress.split(',')[0]) || 
+                    normalizedAddress.includes(key.toLowerCase().split(',')[0])) {
+                    return { address: key, data: value };
+                }
+            }
+            return null;
+        }
+
+        // Analyze title condition
+        function analyzeTitleCondition(encumbrances) {
+            const openMortgages = encumbrances.filter(e => e.status === 'Potentially Open' && e.type === 'Mortgage');
+            const taxLiens = encumbrances.filter(e => e.status === 'Potentially Open' && e.type.includes('Tax Lien'));
+            const otherLiens = encumbrances.filter(e => e.status === 'Potentially Open' && !e.type.includes('Mortgage') && !e.type.includes('Tax Lien'));
+
+            if (openMortgages.length > 0 || taxLiens.length > 0 || otherLiens.length > 0) {
+                return 'Significant Clouds Detected - Professional Review Required';
+            } else if (encumbrances.length > 0) {
+                return 'Exceptions Found';
+            } else {
+                return 'Appears Clear';
+            }
+        }
+
+        // Analyze chain of title
+        function analyzeChainOfTitle(chain) {
+            const gaps = [];
+            const defects = [];
+
+            for (let i = 0; i < chain.length - 1; i++) {
+                const current = chain[i];
+                const next = chain[i + 1];
+                
+                if (current.from !== next.owner) {
+                    gaps.push(`Gap detected between ${current.owner} and ${next.owner}`);
+                }
+            }
+
+            chain.forEach(entry => {
+                if (entry.deedType === 'Quitclaim Deed' && !entry.owner.includes('Estate') && !entry.from.includes('Estate')) {
+                    defects.push(`Quitclaim deed used in non-familial transfer: ${entry.from} to ${entry.owner}`);
+                }
+            });
+
+            if (gaps.length > 0 || defects.length > 0) {
+                return `WARNING: Issues detected in chain of title. ${gaps.join('; ')} ${defects.join('; ')}`;
+            } else {
+                return 'Chain appears complete and unbroken back to 1970.';
+            }
+        }
+
+        // Generate report HTML
+        function generateReportHTML(reportData, address) {
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const titleCondition = analyzeTitleCondition(reportData.encumbrances);
+            const chainAnalysis = analyzeChainOfTitle(reportData.ownershipChain);
+
+            return `
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <!-- Report Header -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                        <div class="text-center">
+                            <h1 class="text-2xl font-bold text-gray-900 mb-2 flex items-center justify-center">
+                                <svg class="h-8 w-8 mr-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                Preliminary Title Report
+                            </h1>
+                            <p class="text-gray-600 mb-4">Prepared for: Client</p>
+                            <p class="text-gray-600 mb-4">Subject Property: ${address}</p>
+                            <p class="text-sm text-gray-500">Generated on: ${currentDate}</p>
+                        </div>
+                        
+                        <!-- Critical Disclaimer -->
+                        <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-red-800">CRITICAL DISCLAIMER</h3>
+                                    <p class="text-sm text-red-700 mt-1">
+                                        This is an informational, automated report based on a search of online public records. 
+                                        It is NOT a substitute for a professional title examination or a policy of title insurance. 
+                                        Data may be incomplete or inaccurate. All findings must be verified by a qualified 
+                                        abstractor, attorney, or title company before any real estate transaction.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Buttons -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-4">
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="exportToPDF('${address}')" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                                <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Executive Summary -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Executive Summary
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Current Owner</label>
+                                    <p class="text-lg font-semibold text-gray-900">${reportData.currentOwner}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Parcel ID (APN)</label>
+                                    <p class="text-lg font-mono text-gray-900">${reportData.parcelNumber}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Tax Status</label>
+                                    <p class="text-lg font-semibold ${reportData.taxStatus === 'Paid' ? 'text-green-600' : 'text-red-600'}">
+                                        ${reportData.taxStatus === 'Paid' ? 'Current' : `DELINQUENT - $${reportData.amountOwed} Owed`}
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Title Condition</label>
+                                    <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTitleConditionColor(titleCondition)}">
+                                        ${getTitleConditionIcon(titleCondition)}
+                                        ${titleCondition}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property & Vesting Information -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">Property & Vesting Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Property Address</label>
+                                    <p class="text-gray-900">${reportData.propertySitus}</p>
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Current Vesting</label>
+                                    <p class="text-gray-900">${reportData.currentOwner}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Vesting Deed</label>
+                                    <p class="text-gray-900">
+                                        ${reportData.ownershipChain[0]?.deedType}, Document #${reportData.ownershipChain[0]?.docNum}, 
+                                        Recorded ${reportData.ownershipChain[0]?.date}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-500">Legal Description</label>
+                                    <p class="text-sm text-gray-600">${reportData.legalDescription}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chain of Title -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Chain of Title (50-Year History)
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            ${reportData.ownershipChain.map((entry, index) => `
+                                <div class="border-l-4 border-blue-200 pl-4 py-2">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-gray-900">${entry.owner}</p>
+                                            <p class="text-sm text-gray-600">
+                                                from <span class="font-medium">${entry.from}</span>
+                                            </p>
+                                        </div>
+                                        <div class="text-right text-sm text-gray-500">
+                                            <p class="font-medium">${entry.deedType}</p>
+                                            <p>${entry.date}</p>
+                                            <p class="font-mono text-xs">Doc #${entry.docNum}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                            <h3 class="font-semibold text-gray-900 mb-2">Chain Analysis</h3>
+                            <p class="text-sm text-gray-700">${chainAnalysis}</p>
+                        </div>
+                    </div>
+
+                    <!-- Schedule B -->
+                    <div class="bg-white rounded-lg border border-gray-200 p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            Schedule B: Exceptions & Encumbrances
+                        </h2>
+                        
+                        ${reportData.encumbrances.length === 0 ? `
+                            <div class="text-center py-8">
+                                <svg class="h-12 w-12 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <p class="text-lg font-medium text-gray-900">No significant encumbrances found.</p>
+                                <p class="text-sm text-gray-600 mt-2">This property appears to have a clear title.</p>
+                            </div>
+                        ` : `
+                            <div class="space-y-4">
+                                ${reportData.encumbrances.map((encumbrance, index) => `
+                                    <div class="border border-gray-200 rounded-lg p-4">
+                                        <div class="flex items-start justify-between mb-3">
+                                            <h3 class="font-semibold text-gray-900">${encumbrance.type}</h3>
+                                            <div class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(encumbrance.status)}">
+                                                ${getStatusIcon(encumbrance.status)}
+                                                <span class="ml-1">${encumbrance.status}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="space-y-2 text-sm">
+                                            <div>
+                                                <span class="font-medium text-gray-700">Parties:</span>
+                                                <span class="ml-2 text-gray-600">${encumbrance.parties.join(' and ')}</span>
+                                            </div>
+                                            
+                                            <div>
+                                                <span class="font-medium text-gray-700">Details:</span>
+                                                <span class="ml-2 text-gray-600">
+                                                    Document #${encumbrance.docNum}, Recorded ${encumbrance.date}
+                                                </span>
+                                            </div>
+                                            
+                                            ${encumbrance.amount ? `
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Amount:</span>
+                                                    <span class="ml-2 text-gray-600">${encumbrance.amount}</span>
+                                                </div>
+                                            ` : ''}
+                                            
+                                            ${encumbrance.description ? `
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Description:</span>
+                                                    <span class="ml-2 text-gray-600">${encumbrance.description}</span>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helper functions for styling
+        function getTitleConditionColor(condition) {
+            switch (condition) {
+                case 'Appears Clear':
+                    return 'text-green-600 bg-green-50';
+                case 'Exceptions Found':
+                    return 'text-yellow-600 bg-yellow-50';
+                case 'Significant Clouds Detected - Professional Review Required':
+                    return 'text-red-600 bg-red-50';
+                default:
+                    return 'text-gray-600 bg-gray-50';
+            }
+        }
+
+        function getTitleConditionIcon(condition) {
+            switch (condition) {
+                case 'Significant Clouds Detected - Professional Review Required':
+                    return '<svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+                case 'Exceptions Found':
+                    return '<svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+                case 'Appears Clear':
+                    return '<svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                default:
+                    return '';
+            }
+        }
+
+        function getStatusColor(status) {
+            switch (status) {
+                case 'Potentially Open':
+                    return 'text-red-600 bg-red-50';
+                case 'Satisfied':
+                    return 'text-green-600 bg-green-50';
+                case 'Active':
+                    return 'text-blue-600 bg-blue-50';
+                default:
+                    return 'text-yellow-600 bg-yellow-50';
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'Potentially Open':
+                    return '<svg class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+                case 'Satisfied':
+                    return '<svg class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                case 'Active':
+                    return '<svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>';
+                default:
+                    return '<svg class="h-5 w-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+            }
+        }
+
+        // Export to PDF function
+        function exportToPDF(address) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            let yPosition = 20;
+
+            // Title
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Preliminary Title Report', pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 15;
+
+            // Property info
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Subject Property: ${address}`, 20, yPosition);
+            yPosition += 10;
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, yPosition);
+            yPosition += 20;
+
+            // Disclaimer
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('CRITICAL DISCLAIMER:', 20, yPosition);
+            yPosition += 8;
+            doc.setFont('helvetica', 'normal');
+            const disclaimerText = 'This is an informational, automated report based on a search of online public records. It is NOT a substitute for a professional title examination or a policy of title insurance. Data may be incomplete or inaccurate. All findings must be verified by a qualified abstractor, attorney, or title company before any real estate transaction.';
+            const disclaimerLines = doc.splitTextToSize(disclaimerText, pageWidth - 40);
+            doc.text(disclaimerLines, 20, yPosition);
+            yPosition += disclaimerLines.length * 5 + 15;
+
+            // Executive Summary
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Executive Summary', 20, yPosition);
+            yPosition += 10;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            
+            const property = findPropertyByAddress(address);
+            if (property) {
+                doc.text(`Current Owner: ${property.data.currentOwner}`, 20, yPosition);
+                yPosition += 6;
+                doc.text(`Parcel ID: ${property.data.parcelNumber}`, 20, yPosition);
+                yPosition += 6;
+                doc.text(`Tax Status: ${property.data.taxStatus === 'Paid' ? 'Current' : `DELINQUENT - $${property.data.amountOwed} Owed`}`, 20, yPosition);
+                yPosition += 6;
+                doc.text(`Title Condition: ${analyzeTitleCondition(property.data.encumbrances)}`, 20, yPosition);
+                yPosition += 15;
+
+                // Chain of Title
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Chain of Title', 20, yPosition);
+                yPosition += 10;
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+                
+                property.data.ownershipChain.forEach((entry, index) => {
+                    if (yPosition > pageHeight - 30) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.text(`${index + 1}. ${entry.owner} from ${entry.from} (${entry.deedType}, ${entry.date})`, 20, yPosition);
+                    yPosition += 6;
+                });
+
+                yPosition += 10;
+                doc.setFont('helvetica', 'bold');
+                doc.text('Chain Analysis:', 20, yPosition);
+                yPosition += 6;
+                doc.setFont('helvetica', 'normal');
+                const analysisLines = doc.splitTextToSize(analyzeChainOfTitle(property.data.ownershipChain), pageWidth - 40);
+                doc.text(analysisLines, 20, yPosition);
+            }
+
+            doc.save(`title-report-${address.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`);
+        }
+
+        // Handle form submission
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const address = document.getElementById('address').value.trim();
+            if (!address) return;
+
+            const searchBtn = document.getElementById('searchBtn');
+            const originalText = searchBtn.innerHTML;
+            
+            // Show loading state
+            searchBtn.innerHTML = `
+                <svg class="h-5 w-5 animate-spin mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Searching...</span>
+            `;
+            searchBtn.disabled = true;
+
+            // Simulate search delay
+            setTimeout(() => {
+                const property = findPropertyByAddress(address);
+                
+                if (property) {
+                    const reportHTML = generateReportHTML(property.data, address);
+                    document.getElementById('reportDisplay').innerHTML = reportHTML;
+                    document.getElementById('reportDisplay').classList.remove('hidden');
+                    
+                    // Scroll to report
+                    document.getElementById('reportDisplay').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('Property not found. Please try one of the test addresses:\n• 123 Main St, Anytown, USA\n• 456 Oak Avenue, Springfield, IL');
+                }
+                
+                // Reset button
+                searchBtn.innerHTML = originalText;
+                searchBtn.disabled = false;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
