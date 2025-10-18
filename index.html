@@ -216,101 +216,54 @@
                     </div>
                     
                     <form id="searchForm" class="space-y-6">
-                        <!-- Search Type Selection -->
-                        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100">
-                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Search Method</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
-                                    <input type="radio" name="searchType" value="address" checked class="text-blue-600 focus:ring-blue-500">
-                                    <div class="ml-3">
-                                        <div class="flex items-center">
-                                            <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            <span class="text-sm font-medium text-gray-700">Property Address</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Search by street address</p>
-                                    </div>
+                        <!-- Property Address Search -->
+                        <div class="space-y-4">
+                            <div>
+                                <label for="addressInput" class="block text-sm font-semibold text-gray-700 mb-3">
+                                    Property Address
                                 </label>
-                                
-                                <label class="flex items-center p-3 bg-white rounded-lg border-2 border-transparent hover:border-blue-200 cursor-pointer transition-all duration-200">
-                                    <input type="radio" name="searchType" value="tax" class="text-blue-600 focus:ring-blue-500">
-                                    <div class="ml-3">
-                                        <div class="flex items-center">
-                                            <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                            </svg>
-                                            <span class="text-sm font-medium text-gray-700">Tax ID</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-1">Search by Tax ID/Parcel Number</p>
-                                    </div>
-                                </label>
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        id="addressInput"
+                                        name="addressInput"
+                                        placeholder="Enter property address (e.g., 123 Main St, Anytown, USA)"
+                                        class="input-modern w-full px-6 py-4 pl-14 pr-4 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-transparent outline-none transition-all duration-300 text-lg"
+                                        autocomplete="address-line1"
+                                        spellcheck="false"
+                                    />
+                                    <svg class="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <div id="addressSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 hidden mt-1 max-h-60 overflow-y-auto"></div>
+                                </div>
+                                <div id="addressValidation" class="mt-2 text-sm"></div>
                             </div>
                         </div>
 
-                        <!-- Dynamic Search Input -->
-                        <div class="relative">
-                            <label for="searchInput" id="searchLabel" class="block text-sm font-semibold text-gray-700 mb-3">
-                                Property Address
-                            </label>
-                            <div class="relative">
-                                <input
-                                    type="text"
-                                    id="searchInput"
-                                    placeholder="Enter property address (e.g., 123 Main St, Anytown, USA)"
-                                    class="input-modern w-full px-6 py-4 pl-14 pr-4 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-transparent outline-none transition-all duration-300 text-lg"
-                                    autocomplete="address-line1"
-                                    spellcheck="false"
-                                />
-                                <svg id="searchIcon" class="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 hidden mt-1 max-h-60 overflow-y-auto"></div>
-                            </div>
-                            <div id="searchValidation" class="mt-2 text-sm"></div>
-                        </div>
-                        
-                        <!-- Advanced Search Options -->
-                        <div class="bg-gray-50 rounded-xl p-4">
-                            <div class="flex items-center justify-between mb-3">
-                                <h3 class="text-sm font-semibold text-gray-700">Advanced Search Options</h3>
-                                <button type="button" id="toggleAdvanced" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                    <span id="toggleText">Show Options</span>
-                                    <svg id="toggleIcon" class="inline w-4 h-4 ml-1 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        <!-- Tax ID/Parcel Number Search -->
+                        <div class="space-y-4">
+                            <div>
+                                <label for="taxIdInput" class="block text-sm font-semibold text-gray-700 mb-3">
+                                    Tax ID / Parcel Number
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        type="text"
+                                        id="taxIdInput"
+                                        name="taxIdInput"
+                                        placeholder="Enter Tax ID or Parcel Number (e.g., R12345-001-002)"
+                                        class="input-modern w-full px-6 py-4 pl-14 pr-4 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-transparent outline-none transition-all duration-300 text-lg"
+                                        autocomplete="off"
+                                        spellcheck="false"
+                                    />
+                                    <svg class="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
-                                </button>
-                            </div>
-                            <div id="advancedOptions" class="hidden space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-600 mb-2">Search Depth</label>
-                                        <select id="searchDepth" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
-                                            <option value="50">50 Years (Standard)</option>
-                                            <option value="70">70 Years (Comprehensive)</option>
-                                            <option value="100">100 Years (Complete)</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-medium text-gray-600 mb-2">Report Detail Level</label>
-                                        <select id="reportDetail" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
-                                            <option value="standard">Standard Report</option>
-                                            <option value="detailed">Detailed Analysis</option>
-                                            <option value="comprehensive">Comprehensive Review</option>
-                                        </select>
-                                    </div>
+                                    <div id="taxIdSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 hidden mt-1 max-h-60 overflow-y-auto"></div>
                                 </div>
-                                <div class="flex items-center space-x-4">
-                                    <label class="flex items-center">
-                                        <input type="checkbox" id="includeTaxHistory" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                        <span class="ml-2 text-sm text-gray-700">Include Tax History</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="checkbox" id="includeZoning" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                        <span class="ml-2 text-sm text-gray-700">Include Zoning Info</span>
-                                    </label>
-                                </div>
+                                <div id="taxIdValidation" class="mt-2 text-sm"></div>
                             </div>
                         </div>
                         
@@ -2249,13 +2202,11 @@
         
         const analytics = new TitleGuardAnalytics();
         
-        // Advanced Search Features
-        class AdvancedSearch {
+        // Simplified Search Management
+        class SearchManager {
             constructor() {
-                this.setupSearchTypeToggle();
                 this.setupAddressAutocomplete();
-                this.setupAdvancedOptions();
-                this.setupRealTimeValidation();
+                this.setupTaxIdAutocomplete();
             }
             
             setupSearchTypeToggle() {
@@ -2420,7 +2371,7 @@
         }
         
         // Initialize advanced search features
-        const advancedSearch = new AdvancedSearch();
+        const searchManager = new SearchManager();
         
         // Global function for suggestion selection
         window.selectSuggestion = function(value, type) {
@@ -2600,8 +2551,24 @@
         document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const searchInput = document.getElementById('searchInput').value.trim();
-            const searchType = document.querySelector('input[name="searchType"]:checked').value;
+            const addressInput = document.getElementById('addressInput').value.trim();
+            const taxIdInput = document.getElementById('taxIdInput').value.trim();
+            
+            // Determine which input has a value
+            let searchInput, searchType;
+            if (addressInput && !taxIdInput) {
+                searchInput = addressInput;
+                searchType = 'address';
+            } else if (taxIdInput && !addressInput) {
+                searchInput = taxIdInput;
+                searchType = 'tax';
+            } else if (addressInput && taxIdInput) {
+                ErrorHandler.showError('Please enter either an address OR a Tax ID/Parcel Number, not both.', 'error');
+                return;
+            } else {
+                ErrorHandler.showError('Please enter either a property address or Tax ID/Parcel Number to search.', 'error');
+                return;
+            }
             
             // Validate input
             const validation = validateSearchInput(searchInput, searchType);
