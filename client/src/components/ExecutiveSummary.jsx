@@ -72,3 +72,4 @@ const ExecutiveSummary = ({ reportData }) => {
 
 export default ExecutiveSummary;
 
+

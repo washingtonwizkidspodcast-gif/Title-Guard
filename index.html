@@ -8,6 +8,23 @@
     <meta name="keywords" content="title search, real estate, property search, title abstractor, real estate data">
     <meta name="author" content="TitleGuard AI">
     
+    <!-- Accessibility -->
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TitleGuard AI">
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://title-guard.netlify.app/">
@@ -22,8 +39,32 @@
     <meta property="twitter:description" content="Digital Title Abstractor and Real Estate Data Analyst">
     <meta property="twitter:image" content="https://title-guard.netlify.app/og-image.png">
 
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    
+    <!-- Critical CSS -->
+    <style>
+        /* Critical above-the-fold styles */
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .loading-skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Service Worker for PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
     <style>
         .animate-spin {
             animation: spin 1s linear infinite;
@@ -185,10 +226,57 @@
                                     id="address"
                                     placeholder="Enter property address (e.g., 123 Main St, Anytown, USA)"
                                     class="input-modern w-full px-6 py-4 pl-14 pr-4 border-2 border-gray-200 rounded-xl focus:ring-0 focus:border-transparent outline-none transition-all duration-300 text-lg"
+                                    autocomplete="address-line1"
+                                    spellcheck="false"
                                 />
                                 <svg class="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
+                                <div id="addressSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 hidden mt-1 max-h-60 overflow-y-auto"></div>
+                            </div>
+                            <div id="addressValidation" class="mt-2 text-sm"></div>
+                        </div>
+                        
+                        <!-- Advanced Search Options -->
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-gray-700">Advanced Search Options</h3>
+                                <button type="button" id="toggleAdvanced" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                    <span id="toggleText">Show Options</span>
+                                    <svg id="toggleIcon" class="inline w-4 h-4 ml-1 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="advancedOptions" class="hidden space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 mb-2">Search Depth</label>
+                                        <select id="searchDepth" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                                            <option value="50">50 Years (Standard)</option>
+                                            <option value="70">70 Years (Comprehensive)</option>
+                                            <option value="100">100 Years (Complete)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-600 mb-2">Report Detail Level</label>
+                                        <select id="reportDetail" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                                            <option value="standard">Standard Report</option>
+                                            <option value="detailed">Detailed Analysis</option>
+                                            <option value="comprehensive">Comprehensive Review</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="includeTaxHistory" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="ml-2 text-sm text-gray-700">Include Tax History</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="includeZoning" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="ml-2 text-sm text-gray-700">Include Zoning Info</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         
@@ -793,44 +881,346 @@
             doc.save(`title-report-${address.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`);
         }
 
-        // Handle form submission
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
+        // Advanced Error Handling & Analytics
+        class TitleGuardAnalytics {
+            constructor() {
+                this.sessionId = this.generateSessionId();
+                this.startTime = Date.now();
+                this.trackEvent('app_loaded');
+            }
+            
+            generateSessionId() {
+                return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            trackEvent(eventName, properties = {}) {
+                const event = {
+                    sessionId: this.sessionId,
+                    event: eventName,
+                    timestamp: new Date().toISOString(),
+                    properties: properties,
+                    userAgent: navigator.userAgent,
+                    url: window.location.href
+                };
+                
+                // Store in localStorage for analytics
+                const events = JSON.parse(localStorage.getItem('tg_events') || '[]');
+                events.push(event);
+                localStorage.setItem('tg_events', JSON.stringify(events.slice(-100))); // Keep last 100 events
+                
+                console.log('Analytics Event:', event);
+            }
+            
+            trackSearch(address, success, duration) {
+                this.trackEvent('search_performed', {
+                    address: address,
+                    success: success,
+                    duration: duration,
+                    timestamp: Date.now() - this.startTime
+                });
+            }
+        }
+        
+        const analytics = new TitleGuardAnalytics();
+        
+        // Advanced Search Features
+        class AdvancedSearch {
+            constructor() {
+                this.setupAddressAutocomplete();
+                this.setupAdvancedOptions();
+                this.setupRealTimeValidation();
+            }
+            
+            setupAddressAutocomplete() {
+                const addressInput = document.getElementById('address');
+                const suggestionsDiv = document.getElementById('addressSuggestions');
+                
+                addressInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    if (query.length < 2) {
+                        suggestionsDiv.classList.add('hidden');
+                        return;
+                    }
+                    
+                    const suggestions = this.getAddressSuggestions(query);
+                    this.displaySuggestions(suggestions);
+                });
+                
+                // Hide suggestions when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!addressInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                        suggestionsDiv.classList.add('hidden');
+                    }
+                });
+            }
+            
+            getAddressSuggestions(query) {
+                const allAddresses = [
+                    '123 Main St, Anytown, USA',
+                    '456 Oak Avenue, Springfield, IL',
+                    '789 Pine Street, Chicago, IL',
+                    '321 Elm Drive, Los Angeles, CA',
+                    '654 Maple Lane, New York, NY'
+                ];
+                
+                return allAddresses.filter(addr => 
+                    addr.toLowerCase().includes(query)
+                ).slice(0, 5);
+            }
+            
+            displaySuggestions(suggestions) {
+                const suggestionsDiv = document.getElementById('addressSuggestions');
+                
+                if (suggestions.length === 0) {
+                    suggestionsDiv.classList.add('hidden');
+                    return;
+                }
+                
+                suggestionsDiv.innerHTML = suggestions.map(addr => `
+                    <div class="px-4 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0" onclick="selectSuggestion('${addr}')">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="text-sm text-gray-700">${addr}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                suggestionsDiv.classList.remove('hidden');
+            }
+            
+            setupAdvancedOptions() {
+                const toggleBtn = document.getElementById('toggleAdvanced');
+                const optionsDiv = document.getElementById('advancedOptions');
+                const toggleText = document.getElementById('toggleText');
+                const toggleIcon = document.getElementById('toggleIcon');
+                
+                toggleBtn.addEventListener('click', () => {
+                    const isHidden = optionsDiv.classList.contains('hidden');
+                    
+                    if (isHidden) {
+                        optionsDiv.classList.remove('hidden');
+                        toggleText.textContent = 'Hide Options';
+                        toggleIcon.style.transform = 'rotate(180deg)';
+                    } else {
+                        optionsDiv.classList.add('hidden');
+                        toggleText.textContent = 'Show Options';
+                        toggleIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            }
+            
+            setupRealTimeValidation() {
+                const addressInput = document.getElementById('address');
+                const validationDiv = document.getElementById('addressValidation');
+                
+                addressInput.addEventListener('input', () => {
+                    const validation = validateAddress(addressInput.value);
+                    this.displayValidation(validation, validationDiv);
+                });
+            }
+            
+            displayValidation(validation, container) {
+                if (validation.isValid) {
+                    container.innerHTML = '<div class="flex items-center text-green-600"><svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Valid address format</div>';
+                } else {
+                    container.innerHTML = validation.errors.map(error => 
+                        `<div class="flex items-center text-red-600"><svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>${error}</div>`
+                    ).join('');
+                }
+            }
+        }
+        
+        // Initialize advanced search features
+        const advancedSearch = new AdvancedSearch();
+        
+        // Global function for suggestion selection
+        window.selectSuggestion = function(address) {
+            document.getElementById('address').value = address;
+            document.getElementById('addressSuggestions').classList.add('hidden');
+            analytics.trackEvent('address_suggestion_selected', { address: address });
+        };
+        
+        // Advanced Error Handling
+        class ErrorHandler {
+            static showError(message, type = 'error') {
+                const errorContainer = document.getElementById('errorContainer') || this.createErrorContainer();
+                
+                const errorElement = document.createElement('div');
+                errorElement.className = `fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+                    type === 'error' ? 'bg-red-50 border border-red-200 text-red-800' : 
+                    type === 'warning' ? 'bg-yellow-50 border border-yellow-200 text-yellow-800' :
+                    'bg-blue-50 border border-blue-200 text-blue-800'
+                }`;
+                
+                errorElement.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <p class="text-sm font-medium">${message}</p>
+                        </div>
+                        <div class="ml-4 flex-shrink-0">
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600">
+                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                errorContainer.appendChild(errorElement);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (errorElement.parentElement) {
+                        errorElement.style.transform = 'translateX(100%)';
+                        setTimeout(() => errorElement.remove(), 300);
+                    }
+                }, 5000);
+                
+                // Show immediately
+                setTimeout(() => {
+                    errorElement.style.transform = 'translateX(0)';
+                }, 100);
+            }
+            
+            static createErrorContainer() {
+                const container = document.createElement('div');
+                container.id = 'errorContainer';
+                container.className = 'fixed top-4 right-4 z-50 space-y-2';
+                document.body.appendChild(container);
+                return container;
+            }
+        }
+        
+        // Enhanced Form Validation
+        function validateAddress(address) {
+            const errors = [];
+            
+            if (!address || address.trim().length === 0) {
+                errors.push('Please enter a property address');
+            } else if (address.length < 5) {
+                errors.push('Address must be at least 5 characters long');
+            } else if (!/^[a-zA-Z0-9\s,.-]+$/.test(address)) {
+                errors.push('Address contains invalid characters');
+            }
+            
+            return {
+                isValid: errors.length === 0,
+                errors: errors
+            };
+        }
+        
+        // Enhanced Search with Progress Tracking
+        function performSearch(address) {
+            const startTime = Date.now();
+            
+            return new Promise((resolve, reject) => {
+                // Simulate realistic search phases
+                const phases = [
+                    { name: 'Connecting to databases...', duration: 500 },
+                    { name: 'Retrieving property information...', duration: 800 },
+                    { name: 'Analyzing chain of title...', duration: 1000 },
+                    { name: 'Searching encumbrances...', duration: 700 },
+                    { name: 'Generating report...', duration: 500 }
+                ];
+                
+                let currentPhase = 0;
+                
+                function updateProgress() {
+                    if (currentPhase < phases.length) {
+                        const phase = phases[currentPhase];
+                        updateSearchButton(`${phase.name}`, true);
+                        
+                        setTimeout(() => {
+                            currentPhase++;
+                            updateProgress();
+                        }, phase.duration);
+                    } else {
+                        const property = findPropertyByAddress(address);
+                        const duration = Date.now() - startTime;
+                        
+                        if (property) {
+                            analytics.trackSearch(address, true, duration);
+                            resolve({ property, duration });
+                        } else {
+                            analytics.trackSearch(address, false, duration);
+                            reject(new Error('Property not found'));
+                        }
+                    }
+                }
+                
+                updateProgress();
+            });
+        }
+        
+        function updateSearchButton(text, isLoading) {
+            const searchBtn = document.getElementById('searchBtn');
+            if (isLoading) {
+                searchBtn.innerHTML = `
+                    <svg class="h-5 w-5 animate-spin mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>${text}</span>
+                `;
+                searchBtn.disabled = true;
+            } else {
+                searchBtn.innerHTML = `
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <span>Search Title</span>
+                `;
+                searchBtn.disabled = false;
+            }
+        }
+        
+        // Enhanced Form Submission Handler
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const address = document.getElementById('address').value.trim();
-            if (!address) return;
-
-            const searchBtn = document.getElementById('searchBtn');
-            const originalText = searchBtn.innerHTML;
             
-            // Show loading state
-            searchBtn.innerHTML = `
-                <svg class="h-5 w-5 animate-spin mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span>Searching...</span>
-            `;
-            searchBtn.disabled = true;
-
-            // Simulate search delay
-            setTimeout(() => {
-                const property = findPropertyByAddress(address);
+            // Validate input
+            const validation = validateAddress(address);
+            if (!validation.isValid) {
+                validation.errors.forEach(error => {
+                    ErrorHandler.showError(error, 'error');
+                });
+                return;
+            }
+            
+            try {
+                const result = await performSearch(address);
+                const { property, duration } = result;
                 
-                if (property) {
-                    const reportHTML = generateReportHTML(property.data, address);
-                    document.getElementById('reportDisplay').innerHTML = reportHTML;
-                    document.getElementById('reportDisplay').classList.remove('hidden');
-                    
-                    // Scroll to report
-                    document.getElementById('reportDisplay').scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    alert('Property not found. Please try one of the test addresses:\n• 123 Main St, Anytown, USA\n• 456 Oak Avenue, Springfield, IL');
-                }
+                // Generate and display report
+                const reportHTML = generateReportHTML(property.data, address);
+                document.getElementById('reportDisplay').innerHTML = reportHTML;
+                document.getElementById('reportDisplay').classList.remove('hidden');
                 
-                // Reset button
-                searchBtn.innerHTML = originalText;
-                searchBtn.disabled = false;
-            }, 2000);
+                // Smooth scroll to report
+                document.getElementById('reportDisplay').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Show success message
+                ErrorHandler.showError(`Search completed successfully in ${(duration/1000).toFixed(1)}s`, 'success');
+                
+            } catch (error) {
+                ErrorHandler.showError(
+                    'Property not found. Please try one of the test addresses:\n• 123 Main St, Anytown, USA\n• 456 Oak Avenue, Springfield, IL',
+                    'warning'
+                );
+            }
         });
     </script>
 </body>

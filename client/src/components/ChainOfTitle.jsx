@@ -39,3 +39,4 @@ const ChainOfTitle = ({ chainOfTitle, chainAnalysis }) => {
 
 export default ChainOfTitle;
 
+
