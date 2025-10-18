@@ -1,6 +1,6 @@
 [build]
-  publish = "client/dist"
-  command = "cd client && npm run build"
+  publish = "."
+  command = ""
 
 [build.environment]
   NODE_VERSION = "18"
