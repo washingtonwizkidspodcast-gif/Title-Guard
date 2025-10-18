@@ -2370,13 +2370,20 @@
             }
         }
         
-        // Initialize advanced search features
-        const searchManager = new SearchManager();
+        // Initialize search features after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchManager = new SearchManager();
+        });
         
         // Global function for suggestion selection
         window.selectSuggestion = function(value, type) {
-            document.getElementById('searchInput').value = value;
-            document.getElementById('searchSuggestions').classList.add('hidden');
+            if (type === 'address') {
+                document.getElementById('addressInput').value = value;
+                document.getElementById('addressSuggestions').classList.add('hidden');
+            } else if (type === 'tax') {
+                document.getElementById('taxIdInput').value = value;
+                document.getElementById('taxIdSuggestions').classList.add('hidden');
+            }
             analytics.trackEvent('search_suggestion_selected', { value: value, type: type });
         };
         
@@ -2564,6 +2571,10 @@
                 
                 console.log('Address input:', addressInput);
                 console.log('Tax ID input:', taxIdInput);
+                
+                // Check if elements exist
+                console.log('Address input element:', document.getElementById('addressInput'));
+                console.log('Tax ID input element:', document.getElementById('taxIdInput'));
             
             // Determine which input has a value
             let searchInput, searchType;
