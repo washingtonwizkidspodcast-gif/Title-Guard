@@ -4293,6 +4293,9 @@
                 
                 // Load Google Maps API if key is provided
                 if (googleMapsKey && googleMapsKey.trim() !== '') {
+                    // Test the API key first
+                    testGoogleMapsAPIKey(googleMapsKey);
+                    // Then load the API
                     loadGoogleMapsAPI(googleMapsKey);
                 }
             }
@@ -4311,6 +4314,30 @@
             }
         });
         
+        // Debug function to test API key
+        function testGoogleMapsAPIKey(apiKey) {
+            console.log('🧪 Testing Google Maps API key...');
+            console.log('Key format:', apiKey.startsWith('AIza') ? '✅ Valid' : '❌ Invalid');
+            console.log('Key length:', apiKey.length, apiKey.length === 39 ? '✅ Correct' : '❌ Incorrect');
+            
+            // Test with a simple geocoding request
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=${apiKey}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'OK') {
+                        console.log('✅ API key is working! Geocoding test successful.');
+                        showNotification('API key test successful! Your Google Maps API key is working correctly.', 'success');
+                    } else {
+                        console.error('❌ API key test failed:', data.status, data.error_message);
+                        showNotification(`API key test failed: ${data.status} - ${data.error_message}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ API key test error:', error);
+                    showNotification('API key test failed: Network error. Please check your internet connection.', 'error');
+                });
+        }
+        
         // GOOGLE MAPS INTEGRATION
         let propertyMap = null;
         let mapMarkers = [];
@@ -4320,6 +4347,25 @@
         function loadGoogleMapsAPI(apiKey) {
             if (googleMapsLoaded) {
                 console.log('🗺️ Google Maps already loaded');
+                return;
+            }
+            
+            // Validate API key format
+            if (!apiKey || apiKey.trim() === '') {
+                console.error('🗺️ API key is empty');
+                showNotification('API key cannot be empty. Please enter a valid Google Maps API key.', 'error');
+                return;
+            }
+            
+            if (!apiKey.startsWith('AIza')) {
+                console.error('🗺️ Invalid API key format');
+                showNotification('Invalid API key format. Google Maps API keys start with "AIza".', 'error');
+                return;
+            }
+            
+            if (apiKey.length !== 39) {
+                console.error('🗺️ API key length incorrect:', apiKey.length);
+                showNotification('Invalid API key length. Google Maps API keys are 39 characters long.', 'error');
                 return;
             }
             
@@ -4339,10 +4385,11 @@
             script.onload = () => {
                 console.log('🗺️ Google Maps API loaded successfully');
                 googleMapsLoaded = true;
+                showNotification('Google Maps API loaded successfully! Interactive maps are now available.', 'success');
             };
-            script.onerror = () => {
-                console.error('🗺️ Failed to load Google Maps API');
-                showNotification('Failed to load Google Maps API. Please check your API key.', 'error');
+            script.onerror = (error) => {
+                console.error('🗺️ Failed to load Google Maps API:', error);
+                showNotification('Failed to load Google Maps API. Please check your API key and ensure the required APIs are enabled.', 'error');
             };
             
             document.head.appendChild(script);
@@ -4354,6 +4401,20 @@
             googleMapsLoaded = true;
             // Map will be created when property data is loaded
         }
+        
+        // Global error handler for Google Maps API errors
+        window.gm_authFailure = function() {
+            console.error('🗺️ Google Maps API authentication failed');
+            showNotification('Google Maps API authentication failed. Please check your API key and ensure billing is enabled.', 'error');
+        };
+        
+        // Handle Google Maps API errors
+        window.addEventListener('error', function(event) {
+            if (event.message && event.message.includes('Google Maps')) {
+                console.error('🗺️ Google Maps error:', event.message);
+                showNotification('Google Maps error: ' + event.message, 'error');
+            }
+        });
         
         // Create property map
         function createPropertyMap(coordinates, propertyData) {
