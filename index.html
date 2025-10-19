@@ -605,14 +605,6 @@
                                             <p class="text-xs text-gray-500">Crime rates, schools, amenities, demographics</p>
                                         </div>
                                     </label>
-                                    
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" id="blockchainVerification" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                        <div>
-                                            <span class="text-sm font-medium text-gray-900">Blockchain Verification</span>
-                                            <p class="text-xs text-gray-500">Smart contract analysis, digital title verification</p>
-                                        </div>
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -1058,21 +1050,6 @@
                     }
                 },
                 
-                // Blockchain Verification (Future Feature)
-                blockchainVerification: {
-                    digitalTitle: {
-                        blockchainHash: "0x1a2b3c4d5e6f7890abcdef1234567890abcdef12",
-                        smartContractAddress: "0x9876543210fedcba0987654321fedcba09876543",
-                        verificationStatus: "Pending",
-                        lastVerified: "2024-01-15"
-                    },
-                    nftTitle: {
-                        tokenId: "TITLE-12345-001",
-                        contractAddress: "0xabcdef1234567890abcdef1234567890abcdef12",
-                        ownershipHistory: "Immutable blockchain record",
-                        transferHistory: "3 transfers recorded"
-                    }
-                }
             },
             "456 Oak Avenue, Springfield, IL": {
                 parcelNumber: "R67890-003-001",
@@ -1360,22 +1337,6 @@
                         bikeScore: "55",
                         commuteTime: "25 minutes average"
                     }
-                },
-                
-                // Blockchain Verification (Future Feature)
-                blockchainVerification: {
-                    digitalTitle: {
-                        blockchainHash: "0x2b3c4d5e6f7890abcdef1234567890abcdef1234",
-                        smartContractAddress: "0x876543210fedcba0987654321fedcba098765432",
-                        verificationStatus: "Pending",
-                        lastVerified: "2024-01-15"
-                    },
-                    nftTitle: {
-                        tokenId: "TITLE-67890-003",
-                        contractAddress: "0xbcdef1234567890abcdef1234567890abcdef123",
-                        ownershipHistory: "Immutable blockchain record",
-                        transferHistory: "2 transfers recorded"
-                    }
                 }
             }
         };
@@ -1549,7 +1510,6 @@
                     ${generateMarketPredictions(reportData.marketPredictions)}
                     ${generateEnvironmentalRisk(reportData.environmentalRisk)}
                     ${generateNeighborhoodIntel(reportData.neighborhoodIntel)}
-                    ${generateBlockchainVerification(reportData.blockchainVerification)}
                 </div>
             `;
         }
@@ -3018,92 +2978,6 @@
                             <div class="text-center">
                                 <div class="text-sm text-gray-600 mb-1">Healthcare</div>
                                 <div class="font-semibold text-red-600">${neighborhoodIntel.amenities.healthcare}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Blockchain Verification Section
-        function generateBlockchainVerification(blockchainVerification) {
-            if (!blockchainVerification) return '';
-            
-            return `
-                <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl shadow-modern border border-gray-200 p-8 card-hover">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                        <svg class="h-6 w-6 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        ⛓️ Blockchain Verification (Future Feature)
-                    </h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Digital Title -->
-                        <div class="bg-white rounded-xl p-6 border border-gray-200">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <svg class="h-5 w-5 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                </svg>
-                                Digital Title
-                            </h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <span class="text-sm text-gray-600">Blockchain Hash</span>
-                                    <p class="font-mono text-xs text-gray-800 break-all">${blockchainVerification.digitalTitle.blockchainHash}</p>
-                                </div>
-                                <div>
-                                    <span class="text-sm text-gray-600">Smart Contract</span>
-                                    <p class="font-mono text-xs text-gray-800 break-all">${blockchainVerification.digitalTitle.smartContractAddress}</p>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-sm text-gray-600">Verification Status</span>
-                                    <span class="font-semibold text-yellow-600">${blockchainVerification.digitalTitle.verificationStatus}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-sm text-gray-600">Last Verified</span>
-                                    <span class="font-semibold text-gray-900">${blockchainVerification.digitalTitle.lastVerified}</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- NFT Title -->
-                        <div class="bg-white rounded-xl p-6 border border-gray-200">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <svg class="h-5 w-5 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011-1h2a1 1 0 011 1v18a2 2 0 01-2 2H4a2 2 0 01-2-2V3a1 1 0 011-1h2a1 1 0 011 1v1m0 0h8m-8 0H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2" />
-                                </svg>
-                                NFT Title
-                            </h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <span class="text-sm text-gray-600">Token ID</span>
-                                    <p class="font-mono text-sm text-gray-800">${blockchainVerification.nftTitle.tokenId}</p>
-                                </div>
-                                <div>
-                                    <span class="text-sm text-gray-600">Contract Address</span>
-                                    <p class="font-mono text-xs text-gray-800 break-all">${blockchainVerification.nftTitle.contractAddress}</p>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-sm text-gray-600">Ownership History</span>
-                                    <span class="font-semibold text-green-600">${blockchainVerification.nftTitle.ownershipHistory}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-sm text-gray-600">Transfer History</span>
-                                    <span class="font-semibold text-blue-600">${blockchainVerification.nftTitle.transferHistory}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <div class="flex items-center">
-                            <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <div>
-                                <h4 class="font-semibold text-blue-900">Coming Soon</h4>
-                                <p class="text-sm text-blue-700">Blockchain verification will provide immutable title records and smart contract integration for enhanced security and transparency.</p>
                             </div>
                         </div>
                     </div>
@@ -5121,22 +4995,6 @@
                             transitScore: "N/A",
                             bikeScore: "N/A",
                             commuteTime: "N/A"
-                        }
-                    },
-                    
-                    // Blockchain Verification
-                    blockchainVerification: {
-                        digitalTitle: {
-                            blockchainHash: "N/A",
-                            smartContractAddress: "N/A",
-                            verificationStatus: "Not Available",
-                            lastVerified: "N/A"
-                        },
-                        nftTitle: {
-                            tokenId: "N/A",
-                            contractAddress: "N/A",
-                            ownershipHistory: "Not Available",
-                            transferHistory: "Not Available"
                         }
                     }
                 },
